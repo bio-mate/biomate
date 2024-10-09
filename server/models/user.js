@@ -1,27 +1,31 @@
-// models/User.js
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-  name: {
+  username: {
     type: String,
     required: true,
+    unique: true,
   },
   email: {
     type: String,
     required: true,
-    unique: true,
-    match: /.+\@.+\..+/ // Simple email validation regex
+    unique: true, // Ensure that the email is unique
+    lowercase: true, // Store email in lowercase
   },
   mobile: {
     type: String,
     required: true,
-    unique: true,
   },
   password: {
     type: String,
     required: true,
   },
-  // Note: confirmPassword is not stored in the database
-});
+  resetToken: {
+    type: String,
+  },
+  resetTokenExpiration: {
+    type: Date,
+  },
+}, { timestamps: true }); // Automatically manage createdAt and updatedAt fields
 
 module.exports = mongoose.model('User', userSchema);

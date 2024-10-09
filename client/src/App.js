@@ -5,7 +5,7 @@ import Signup from './Pages/Login/Signup';
 import Login from './Pages/Login/Login';
 import ForgotPassword from './Pages/Login/ForgotPassword';
 import ResetPassword from './Pages/Login/ResetPassword';
-import Home from './Pages/Home'; // Ensure this is capitalized
+import Home from './Pages/Home';
 
 const App = () => {
   return (
@@ -16,7 +16,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
-          <Route path="/" element={<Home />} /> {/* Ensure 'Home' is capitalized */}
+          <Route path="/" element={<Home />} />
         </Routes>
       </div>
     </Router>
