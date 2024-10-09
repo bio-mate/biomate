@@ -1,5 +1,6 @@
 // src/components/Signup.js
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -16,22 +17,40 @@ const Signup = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch('http://localhost:4000/api/auth/signup', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    });
-    const data = await response.json();
-    if (response.ok) {
-      setMessage('Signup successful! Please log in.');
-    } else {
-      setMessage(data.message || 'Error occurred.');
+    
+    try {
+      const response = await axios.post('http://localhost:4000/api/auth/signup', formData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      // Assuming a successful response has a status code of 200
+      if (response.status === 200) {
+        setMessage('Signup successful! Please log in.');
+      }
+    } catch (error) {
+      handleError(error);
     }
   };
+  
+  const handleError = (error) => {
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      setMessage(error.response.data.message || 'An error occurred during signup.');
+    } else if (error.request) {
+      // The request was made but no response was received
+      setMessage('No response received from the server.');
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      setMessage('Error: ' + error.message);
+    }
+  };
+  
 
   return (
     <div>

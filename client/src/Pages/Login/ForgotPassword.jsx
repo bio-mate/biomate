@@ -1,9 +1,10 @@
 // src/components/ForgotPassword.js
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import axios from "axios";
 
 const ForgotPassword = () => {
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
 
   const handleChange = (e) => {
     setEmail(e.target.value);
@@ -11,18 +12,40 @@ const ForgotPassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch('http://localhost:4000/api/auth/forgot-password', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email }),
-    });
-    const data = await response.json();
-    if (response.ok) {
-      setMessage('Password reset link sent to your email.');
+
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/auth/forgot-password",
+        { email },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      // Assuming a successful response has a status code of 200
+      if (response.status === 200) {
+        setMessage("Password reset link sent to your email.");
+      }
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  const handleError = (error) => {
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      setMessage(
+        error.response.data.message ||
+          "An error occurred while sending the password reset link."
+      );
+    } else if (error.request) {
+      // The request was made but no response was received
+      setMessage("No response received from the server.");
     } else {
-      setMessage(data.message || 'Error occurred.');
+      // Something happened in setting up the request that triggered an Error
+      setMessage("Error: " + error.message);
     }
   };
 
@@ -30,7 +53,12 @@ const ForgotPassword = () => {
     <div>
       <h2>Forgot Password</h2>
       <form onSubmit={handleSubmit}>
-        <input type="email" placeholder="Email" onChange={handleChange} required />
+        <input
+          type="email"
+          placeholder="Email"
+          onChange={handleChange}
+          required
+        />
         <button type="submit">Send Reset Link</button>
       </form>
       {message && <p>{message}</p>}
