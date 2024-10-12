@@ -1,0 +1,18 @@
+.btn {
+    border-radius: 8px; /* Rounded corners */
+    padding: 10px 20px; /* Increase padding */
+    font-weight: bold; /* Make the text bold */
+  }
+  
+  .btn-danger {
+    background-color: #ff4d4d; /* Custom red color */
+  }
+  
+  .btn-success {
+    background-color: #4dff4d; /* Custom green color */
+  }
+  
+  .btn:hover {
+    opacity: 0.9; /* Slight opacity change on hover */
+  }
+  

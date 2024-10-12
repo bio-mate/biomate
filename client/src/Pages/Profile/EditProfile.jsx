@@ -1,258 +1,474 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import apiRequest from "../../utils/api"; // Assuming this is a custom API utility
+import { useNavigate, useParams } from "react-router-dom";
 
-const EditProfileForm = () => {
-  const { id } = useParams(); // Get the profile ID from the URL
-  console.log('id', id)
-  const navigate = useNavigate(); // For navigation after submission
-  const [formData, setFormData] = useState({
-    userId: '',
+const UpdateProfile = () => {
+  const { userId = "6708dd4386ad31e623c61354" } = useParams(); // Get user ID from the route
+  const navigate = useNavigate();
+  
+  const [profileData, setProfileData] = useState({
     personalDetails: {
-      firstName: '',
-      lastName: '',
-      dateOfBirth: '',
-      gender: '',
-      address: {
-        street: '',
-        city: '',
-        state: '',
-        country: '',
-        zipCode: '',
-      },
+      firstName: "",
+      lastName: "",
+      age: "",
+      gender: "",
+      bloodGroup: "",
+      complexion: "",
+      height: "",
+      weight: "",
     },
-    educationDetails: [],
-    skills: [],
-    experience: [],
+    religiousBackground: {
+      religion: "",
+      caste: "",
+      subCaste: "",
+      language: "",
+    },
+    astroDetails: {
+      dateOfBirth: "",
+      placeOfBirth: "",
+      timeOfBirth: "",
+      rashi: "",
+      nakshatra: "",
+      gotra: "",
+    },
+    familyDetails: {
+      fatherName: "",
+      motherName: "",
+      fatherOccupation: "",
+      motherOccupation: "",
+      noOfBrothers: "",
+      noOfSisters: "",
+    },
+    educationDetails: {
+      degree: "",
+      collegeName: "",
+    },
+    careerDetails: {
+      employedIn: "",
+      companyName: "",
+      designation: "",
+      income: "",
+    },
+    lifestyle: {
+      diet: "",
+    },
+    contactInformation: {
+      contactNumber: "",
+      address: {
+        country: "",
+        state: "",
+        district: "",
+        residentialAddress: "",
+        permanentAddress: "",
+      },
+      linkedInUrl: "",
+      instagramUrl: "",
+      facebookUrl: "",
+    },
   });
 
   useEffect(() => {
-    const fetchProfile = async () => {
+    const fetchProfileData = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/api/profile/viewProfile/${id}`);
-        setFormData(response.data);
+        const response = await apiRequest("GET", `http://localhost:4000/api/profile/viewProfile/${userId}`);
+        if (response.status === 200) {
+          setProfileData(response.data); // Assuming response data is in the correct format
+        }
       } catch (error) {
-        console.error('Error fetching profile:', error);
+        console.error("Error fetching profile data:", error);
       }
     };
+    fetchProfileData();
+  }, [userId]);
 
-    fetchProfile();
-  }, [id]);
-
-  const handleChange = (e) => {
+  const handleChange = (e, section) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
+    setProfileData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [section]: {
+        ...prevData[section],
+        [name]: value,
+      },
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:4000/api/profile/updateProfile/${id}`, formData);
-      navigate(`/view-profile/${id}`); // Redirect after successful update
+      const response = await apiRequest("PUT", `http://localhost:4000/api/profile/updateProfile/${userId}`, profileData);
+      if (response.status === 200) {
+        console.log("Profile updated successfully");
+        navigate(`/view-profile/${userId}`); // Redirect after update
+      }
     } catch (error) {
-      console.error('Error updating profile:', error);
+      console.error("Error updating profile:", error);
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2>Edit Profile</h2>
+      <h2>Update Profile</h2>
+      
+      <div>
+        <h3>Personal Details</h3>
+        <input
+          type="text"
+          name="firstName"
+          placeholder="First Name"
+          value={profileData.personalDetails.firstName}
+          onChange={(e) => handleChange(e, 'personalDetails')}
+          required
+        />
+        <input
+          type="text"
+          name="lastName"
+          placeholder="Last Name"
+          value={profileData.personalDetails.lastName}
+          onChange={(e) => handleChange(e, 'personalDetails')}
+          required
+        />
+        <input
+          type="number"
+          name="age"
+          placeholder="Age"
+          value={profileData.personalDetails.age}
+          onChange={(e) => handleChange(e, 'personalDetails')}
+          required
+        />
+        <select
+          name="gender"
+          value={profileData.personalDetails.gender}
+          onChange={(e) => handleChange(e, 'personalDetails')}
+          required
+        >
+          <option value="">Select Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+        <select
+          name="bloodGroup"
+          value={profileData.personalDetails.bloodGroup}
+          onChange={(e) => handleChange(e, 'personalDetails')}
+          required
+        >
+          <option value="">Select Blood Group</option>
+          <option value="A Positive (A+)">A Positive (A+)</option>
+          <option value="A Negative (A-)">A Negative (A-)</option>
+          <option value="B Positive (B+)">B Positive (B+)</option>
+          <option value="B Negative (B-)">B Negative (B-)</option>
+          <option value="AB Positive (AB+)">AB Positive (AB+)</option>
+          <option value="AB Negative (AB-)">AB Negative (AB-)</option>
+          <option value="O Positive (O+)">O Positive (O+)</option>
+          <option value="O Negative (O-)">O Negative (O-)</option>
+        </select>
+        <select
+          name="complexion"
+          value={profileData.personalDetails.complexion}
+          onChange={(e) => handleChange(e, 'personalDetails')}
+          required
+        >
+          <option value="">Select Complexion</option>
+          <option value="Fair">Fair</option>
+          <option value="Wheatish">Wheatish</option>
+          <option value="Dusky">Dusky</option>
+          <option value="Dark">Dark</option>
+        </select>
+        <select
+          name="height"
+          value={profileData.personalDetails.height}
+          onChange={(e) => handleChange(e, 'personalDetails')}
+          required
+        >
+          <option value="">Select Height</option>
+          {/* Add more height options as needed */}
+          <option value="5'0''">5'0''</option>
+          <option value="5'5''">5'5''</option>
+          <option value="6'0''">6'0''</option>
+        </select>
+        <input
+          type="number"
+          name="weight"
+          placeholder="Weight"
+          value={profileData.personalDetails.weight}
+          onChange={(e) => handleChange(e, 'personalDetails')}
+          required
+        />
+      </div>
 
-      <h4>Personal Details</h4>
-      <input
-        type="text"
-        name="firstName"
-        value={formData.personalDetails.firstName}
-        onChange={handleChange}
-        placeholder="First Name"
-        required
-      />
-      <input
-        type="text"
-        name="lastName"
-        value={formData.personalDetails.lastName}
-        onChange={handleChange}
-        placeholder="Last Name"
-        required
-      />
-      <input
-        type="date"
-        name="dateOfBirth"
-        value={formData.personalDetails.dateOfBirth.split('T')[0]} // Format for input
-        onChange={handleChange}
-        required
-      />
-      <select
-        name="gender"
-        value={formData.personalDetails.gender}
-        onChange={handleChange}
-        required
-      >
-        <option value="">Select Gender</option>
-        <option value="Male">Male</option>
-        <option value="Female">Female</option>
-        <option value="Other">Other</option>
-      </select>
-      <h5>Address</h5>
-      <input
-        type="text"
-        name="street"
-        value={formData.personalDetails.address.street}
-        onChange={(e) => handleChange({ target: { name: 'address.street', value: e.target.value } })}
-        placeholder="Street"
-      />
-      <input
-        type="text"
-        name="city"
-        value={formData.personalDetails.address.city}
-        onChange={(e) => handleChange({ target: { name: 'address.city', value: e.target.value } })}
-        placeholder="City"
-      />
-      <input
-        type="text"
-        name="state"
-        value={formData.personalDetails.address.state}
-        onChange={(e) => handleChange({ target: { name: 'address.state', value: e.target.value } })}
-        placeholder="State"
-      />
-      <input
-        type="text"
-        name="country"
-        value={formData.personalDetails.address.country}
-        onChange={(e) => handleChange({ target: { name: 'address.country', value: e.target.value } })}
-        placeholder="Country"
-      />
-      <input
-        type="text"
-        name="zipCode"
-        value={formData.personalDetails.address.zipCode}
-        onChange={(e) => handleChange({ target: { name: 'address.zipCode', value: e.target.value } })}
-        placeholder="Zip Code"
-      />
+      <div>
+        <h3>Religious Background</h3>
+        <input
+          type="text"
+          name="religion"
+          placeholder="Religion"
+          value={profileData.religiousBackground.religion}
+          onChange={(e) => handleChange(e, 'religiousBackground')}
+          required
+        />
+        <input
+          type="text"
+          name="caste"
+          placeholder="Caste"
+          value={profileData.religiousBackground.caste}
+          onChange={(e) => handleChange(e, 'religiousBackground')}
+        />
+        <input
+          type="text"
+          name="subCaste"
+          placeholder="Sub Caste"
+          value={profileData.religiousBackground.subCaste}
+          onChange={(e) => handleChange(e, 'religiousBackground')}
+        />
+        <input
+          type="text"
+          name="language"
+          placeholder="Language"
+          value={profileData.religiousBackground.language}
+          onChange={(e) => handleChange(e, 'religiousBackground')}
+          required
+        />
+      </div>
 
-      <h4>Education Details</h4>
-      {formData.educationDetails.map((edu, index) => (
-        <div key={index}>
-          <input
-            type="text"
-            name={`degree_${index}`}
-            value={edu.degree}
-            onChange={(e) => {
-              const updatedEdu = [...formData.educationDetails];
-              updatedEdu[index].degree = e.target.value;
-              setFormData({ ...formData, educationDetails: updatedEdu });
-            }}
-            placeholder="Degree"
-          />
-          <input
-            type="text"
-            name={`institution_${index}`}
-            value={edu.institution}
-            onChange={(e) => {
-              const updatedEdu = [...formData.educationDetails];
-              updatedEdu[index].institution = e.target.value;
-              setFormData({ ...formData, educationDetails: updatedEdu });
-            }}
-            placeholder="Institution"
-          />
-          <input
-            type="date"
-            name={`startDate_${index}`}
-            value={edu.startDate.split('T')[0]}
-            onChange={(e) => {
-              const updatedEdu = [...formData.educationDetails];
-              updatedEdu[index].startDate = e.target.value;
-              setFormData({ ...formData, educationDetails: updatedEdu });
-            }}
-          />
-          <input
-            type="date"
-            name={`endDate_${index}`}
-            value={edu.endDate ? edu.endDate.split('T')[0] : ''}
-            onChange={(e) => {
-              const updatedEdu = [...formData.educationDetails];
-              updatedEdu[index].endDate = e.target.value;
-              setFormData({ ...formData, educationDetails: updatedEdu });
-            }}
-          />
-        </div>
-      ))}
-      {/* Optionally, you could add a button to add more education fields */}
+      <div>
+        <h3>Astrological Details</h3>
+        <input
+          type="date"
+          name="dateOfBirth"
+          value={profileData.astroDetails.dateOfBirth}
+          onChange={(e) => handleChange(e, 'astroDetails')}
+          required
+        />
+        <input
+          type="text"
+          name="placeOfBirth"
+          placeholder="Place of Birth"
+          value={profileData.astroDetails.placeOfBirth}
+          onChange={(e) => handleChange(e, 'astroDetails')}
+          required
+        />
+        <input
+          type="text"
+          name="timeOfBirth"
+          placeholder="Time of Birth"
+          value={profileData.astroDetails.timeOfBirth}
+          onChange={(e) => handleChange(e, 'astroDetails')}
+        />
+        <input
+          type="text"
+          name="rashi"
+          placeholder="Rashi"
+          value={profileData.astroDetails.rashi}
+          onChange={(e) => handleChange(e, 'astroDetails')}
+          required
+        />
+        <input
+          type="text"
+          name="nakshatra"
+          placeholder="Nakshatra"
+          value={profileData.astroDetails.nakshatra}
+          onChange={(e) => handleChange(e, 'astroDetails')}
+        />
+        <input
+          type="text"
+          name="gotra"
+          placeholder="Gotra"
+          value={profileData.astroDetails.gotra}
+          onChange={(e) => handleChange(e, 'astroDetails')}
+          required
+        />
+      </div>
 
-      <h4>Skills</h4>
-      <input
-        type="text"
-        value={formData.skills.join(', ')}
-        onChange={(e) => setFormData({ ...formData, skills: e.target.value.split(',').map(skill => skill.trim()) })}
-        placeholder="Enter skills separated by commas"
-      />
+      <div>
+        <h3>Family Details</h3>
+        <input
+          type="text"
+          name="fatherName"
+          placeholder="Father's Name"
+          value={profileData.familyDetails.fatherName}
+          onChange={(e) => handleChange(e, 'familyDetails')}
+          required
+        />
+        <input
+          type="text"
+          name="motherName"
+          placeholder="Mother's Name"
+          value={profileData.familyDetails.motherName}
+          onChange={(e) => handleChange(e, 'familyDetails')}
+          required
+        />
+        <input
+          type="text"
+          name="fatherOccupation"
+          placeholder="Father's Occupation"
+          value={profileData.familyDetails.fatherOccupation}
+          onChange={(e) => handleChange(e, 'familyDetails')}
+        />
+        <input
+          type="text"
+          name="motherOccupation"
+          placeholder="Mother's Occupation"
+          value={profileData.familyDetails.motherOccupation}
+          onChange={(e) => handleChange(e, 'familyDetails')}
+        />
+        <input
+          type="number"
+          name="noOfBrothers"
+          placeholder="Number of Brothers"
+          value={profileData.familyDetails.noOfBrothers}
+          onChange={(e) => handleChange(e, 'familyDetails')}
+        />
+        <input
+          type="number"
+          name="noOfSisters"
+          placeholder="Number of Sisters"
+          value={profileData.familyDetails.noOfSisters}
+          onChange={(e) => handleChange(e, 'familyDetails')}
+        />
+      </div>
 
-      <h4>Experience</h4>
-      {formData.experience.map((exp, index) => (
-        <div key={index}>
-          <input
-            type="text"
-            name={`jobTitle_${index}`}
-            value={exp.jobTitle}
-            onChange={(e) => {
-              const updatedExp = [...formData.experience];
-              updatedExp[index].jobTitle = e.target.value;
-              setFormData({ ...formData, experience: updatedExp });
-            }}
-            placeholder="Job Title"
-          />
-          <input
-            type="text"
-            name={`company_${index}`}
-            value={exp.company}
-            onChange={(e) => {
-              const updatedExp = [...formData.experience];
-              updatedExp[index].company = e.target.value;
-              setFormData({ ...formData, experience: updatedExp });
-            }}
-            placeholder="Company"
-          />
-          <input
-            type="date"
-            name={`expStartDate_${index}`}
-            value={exp.startDate.split('T')[0]}
-            onChange={(e) => {
-              const updatedExp = [...formData.experience];
-              updatedExp[index].startDate = e.target.value;
-              setFormData({ ...formData, experience: updatedExp });
-            }}
-          />
-          <input
-            type="date"
-            name={`expEndDate_${index}`}
-            value={exp.endDate ? exp.endDate.split('T')[0] : ''}
-            onChange={(e) => {
-              const updatedExp = [...formData.experience];
-              updatedExp[index].endDate = e.target.value;
-              setFormData({ ...formData, experience: updatedExp });
-            }}
-          />
-          <input
-            type="text"
-            name={`responsibilities_${index}`}
-            value={exp.responsibilities}
-            onChange={(e) => {
-              const updatedExp = [...formData.experience];
-              updatedExp[index].responsibilities = e.target.value;
-              setFormData({ ...formData, experience: updatedExp });
-            }}
-            placeholder="Responsibilities"
-          />
-        </div>
-      ))}
-      {/* Optionally, you could add a button to add more experience fields */}
+      <div>
+        <h3>Education Details</h3>
+        <input
+          type="text"
+          name="degree"
+          placeholder="Degree"
+          value={profileData.educationDetails.degree}
+          onChange={(e) => handleChange(e, 'educationDetails')}
+        />
+        <input
+          type="text"
+          name="collegeName"
+          placeholder="College Name"
+          value={profileData.educationDetails.collegeName}
+          onChange={(e) => handleChange(e, 'educationDetails')}
+        />
+      </div>
+
+      <div>
+        <h3>Career Details</h3>
+        <input
+          type="text"
+          name="employedIn"
+          placeholder="Employed In"
+          value={profileData.careerDetails.employedIn}
+          onChange={(e) => handleChange(e, 'careerDetails')}
+        />
+        <input
+          type="text"
+          name="companyName"
+          placeholder="Company Name"
+          value={profileData.careerDetails.companyName}
+          onChange={(e) => handleChange(e, 'careerDetails')}
+        />
+        <input
+          type="text"
+          name="designation"
+          placeholder="Designation"
+          value={profileData.careerDetails.designation}
+          onChange={(e) => handleChange(e, 'careerDetails')}
+        />
+        <input
+          type="number"
+          name="income"
+          placeholder="Income"
+          value={profileData.careerDetails.income}
+          onChange={(e) => handleChange(e, 'careerDetails')}
+        />
+      </div>
+
+      <div>
+        <h3>Lifestyle</h3>
+        <select
+          name="diet"
+          value={profileData.lifestyle.diet}
+          onChange={(e) => handleChange(e, 'lifestyle')}
+          required
+        >
+          <option value="">Select Diet</option>
+          <option value="Vegetarian">Vegetarian</option>
+          <option value="Non-Vegetarian">Non-Vegetarian</option>
+          <option value="Vegan">Vegan</option>
+        </select>
+      </div>
+
+      <div>
+        <h3>Contact Information</h3>
+        <input
+          type="text"
+          name="contactNumber"
+          placeholder="Contact Number"
+          value={profileData.contactInformation.contactNumber}
+          onChange={(e) => handleChange(e, 'contactInformation')}
+          required
+        />
+        <h4>Address</h4>
+        <input
+          type="text"
+          name="country"
+          placeholder="Country"
+          value={profileData.contactInformation.address.country}
+          onChange={(e) => handleChange(e, 'contactInformation.address')}
+          required
+        />
+        <input
+          type="text"
+          name="state"
+          placeholder="State"
+          value={profileData.contactInformation.address.state}
+          onChange={(e) => handleChange(e, 'contactInformation.address')}
+          required
+        />
+        <input
+          type="text"
+          name="district"
+          placeholder="District"
+          value={profileData.contactInformation.address.district}
+          onChange={(e) => handleChange(e, 'contactInformation.address')}
+          required
+        />
+        <input
+          type="text"
+          name="residentialAddress"
+          placeholder="Residential Address"
+          value={profileData.contactInformation.address.residentialAddress}
+          onChange={(e) => handleChange(e, 'contactInformation.address')}
+          required
+        />
+        <input
+          type="text"
+          name="permanentAddress"
+          placeholder="Permanent Address"
+          value={profileData.contactInformation.address.permanentAddress}
+          onChange={(e) => handleChange(e, 'contactInformation.address')}
+          required
+        />
+        <input
+          type="text"
+          name="linkedInUrl"
+          placeholder="LinkedIn URL"
+          value={profileData.contactInformation.linkedInUrl}
+          onChange={(e) => handleChange(e, 'contactInformation')}
+        />
+        <input
+          type="text"
+          name="instagramUrl"
+          placeholder="Instagram URL"
+          value={profileData.contactInformation.instagramUrl}
+          onChange={(e) => handleChange(e, 'contactInformation')}
+        />
+        <input
+          type="text"
+          name="facebookUrl"
+          placeholder="Facebook URL"
+          value={profileData.contactInformation.facebookUrl}
+          onChange={(e) => handleChange(e, 'contactInformation')}
+        />
+      </div>
 
       <button type="submit">Update Profile</button>
     </form>
   );
 };
 
-export default EditProfileForm;
+export default UpdateProfile;

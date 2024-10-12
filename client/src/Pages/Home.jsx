@@ -10,7 +10,6 @@ const Home = () => {
     <div>home
 
         <MultiStepForm/>
-        {/* <ProfileList/> */}
     </div>
   )
 }
