@@ -3,11 +3,15 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import useAuth from "../../context/useAuth";
 import ProfileCard from "../../components/ProfileCard";
+import DetailsPage from "../../components/PersonalDetails";
+import Footer from "../../components/Footer";
+import KundaliCard from "../../components/KundaliCard";
 
-const ViewProfile = ({ edit = true }) => {
+const ViewProfile = ({ edit = true, isPreviewPage }) => {
   const { user } = useAuth(); // Get the logged-in user from context
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const photos = "../logo512.png";
   const [error, setError] = useState(null);
   console.log("user", user);
   useEffect(() => {
@@ -35,78 +39,103 @@ const ViewProfile = ({ edit = true }) => {
   if (error) {
     return <div>{error}</div>;
   }
-
+  console.log("profiles.firstName", profiles.personalDetails?.firstName);
   return (
     <div>
       <h2>Profiles</h2>
-      {!profiles && profiles.length === 0 ? (
+      {profiles.length === 0 ? (
         <p>No profiles available.</p>
       ) : (
         profiles.map((profile) => (
-          <div
-            key={profile.userId}
-            style={{
-              border: "1px solid #ccc",
-              margin: "10px",
-              padding: "10px",
-            }}
-          >
+          <div key={profile.userId}>
             <div className="min-h-screen bg-gray-100 flex items-center justify-center">
               <ProfileCard
-              userId = "6708b08886ad31e623c612df"
+                userId="670a7ed298b8c120621d87a0"
                 isPreview={edit}
-                name={`${profile.personalDetails?.firstName || "N/A"} ${
-                  profile.personalDetails?.lastName || "N/A"
-                }`} 
+                name={
+                  profile.personalDetails?.firstName ||
+                  "N/A" + profile.personalDetails?.lastName ||
+                  "N/A"
+                }
                 age={profile.personalDetails?.age || "N/A"}
-                location={`${profile.personalDetails?.District || "N/A"}, ${
-                  profile.personalDetails?.State || "N/A"
-                }, ${profile.personalDetails?.Country || "N/A"}`}
-                profession={profile.personalDetails?.Desiganation || "N/A"}
-                company={profile.personalDetails?.CompanyName || "N/A"}
-                //images={photos} // Use the fetched images here
-                facebookUrl={profile.personalDetails?.FacebookUrl}
-                instagramUrl={profile.personalDetails?.InstagramUrl}
-                linkedInUrl={profile.personalDetails?.LinkedInUrl}
+                location={`${
+                  profile.contactInformation?.address.district || "N/A"
+                }, ${profile.contactInformation?.address.state || "N/A"}, ${
+                  profile.contactInformation?.address.country || "N/A"
+                }`}
+                profession={profile.careerDetails?.desiganation || "N/A"}
+                company={profile.careerDetails?.companyName || "N/A"}
+                images={photos} // Use the fetched images here
+                facebookUrl={profile.contactInformation?.facebookUrl}
+                instagramUrl={profile.contactInformation?.instagramUrl}
+                linkedInUrl={profile.contactInformation?.linkedInUrl}
               />
             </div>
-
-            <h3>
-              {profile.personalDetails?.firstName || "N/A"}{" "}
-              {profile.personalDetails?.lastName || "N/A"}
-            </h3>
-            <p>Age: {profile.personalDetails?.age || "N/A"}</p>
-            <p>Gender: {profile.personalDetails?.gender || "N/A"}</p>
-            <p>Blood Group: {profile.personalDetails?.bloodGroup || "N/A"}</p>
-            <p>Height: {profile.personalDetails?.height || "N/A"}</p>
-            <p>Weight: {profile.personalDetails?.weight || "N/A"}</p>
-
-            <h4>Address</h4>
-            <p>
-              {profile.contactInformation?.address.residentialAddress || "N/A"},{" "}
-              {profile.contactInformation?.address.city || "N/A"},{" "}
-              {profile.contactInformation?.address.state || "N/A"},{" "}
-              {profile.contactInformation?.address.country || "N/A"}
-            </p>
-
-            <h4>Career</h4>
-            {profile.careerDetails && profile.careerDetails.length > 0 ? (
-              profile.careerDetails.map((career, index) => (
-                <div key={index}>
-                  <p>Employed In: {career.employedIn || "N/A"}</p>
-                  <p>Company Name: {career.companyName || "N/A"}</p>
-                  <p>Designation: {career.designation || "N/A"}</p>
-                  <p>Income: {career.income || "N/A"}</p>
-                </div>
-              ))
-            ) : (
-              <p>No career details listed.</p>
-            )}
-
-            <h4>Lifestyle</h4>
-            <p>Diet: {profile.lifestyle?.diet || "N/A"}</p>
-
-            {edit ? (
+            <DetailsPage
+              // Personal Details
+              gender={profile.personalDetails?.gender || "N/A"}
+              bloodGroup={profile.personalDetails?.bloodGroup || "N/A"}
+              complexion={profile.personalDetails?.complexion}
+              height={profile.personalDetails?.height || "N/A"}
+              weight={`${profile.personalDetails?.weight} kg` || "N/A"}
+              // Religious Background
+              religion={profile.religiousBackground?.religion || "N/A"}
+              cast={profile.religiousBackground?.caste || "N/A"}
+              subCaste={profile.religiousBackground?.subCaste || "N/A"}
+              language={profile.religiousBackground?.language || "N/A"}
+              // Astro Details
+              dateOfBirth={profile.astroDetails?.dateOfBirth || "N/A"}
+              placeOfBirth={profile.astroDetails?.placeOfBirth || "N/A"}
+              timeOfBirth={profile.astroDetails?.timeOfBirth || "N/A"}
+              rashi={profile.astroDetails?.rashi || "N/A"}
+              nakshatra={profile.astroDetails?.nakshatra || "N/A"}
+              gotra={profile.astroDetails?.gotra || "N/A"}
+              location={`${
+                profile.contactInformation?.address.district || "N/A"
+              }, ${profile.contactInformation?.address.state || "N/A"}`}
+              //Family Details
+              fatherName={profile.familyDetails?.fatherName || "N/A"}
+              motherName={profile.familyDetails?.motherName || "N/A"}
+              fatherOccupation={
+                profile.familyDetails?.fatherOccupation || "N/A"
+              }
+              motherOccupation={
+                profile.familyDetails?.motherOccupation || "N/A"
+              }
+              noOfBrothers={profile.familyDetails?.noOfBrothers || "N/A"}
+              noOfSisters={profile.familyDetails?.noOfSisters || "N/A"}
+              // Education Details
+              degree={
+                profile.educationDetails?.educationDetails.degree || "N/A"
+              }
+              collegeName={profile.personalDetails?.CollegeName || "N/A"}
+              // Career Details
+              EmployedIn={profile.careerDetails?.employedIn || "N/A"}
+              companyName={profile.careerDetails?.companyName || "N/A"}
+              position={profile.careerDetails?.designation || "N/A"}
+              income={profile.careerDetails?.income || "N/A"}
+              //LifeStyle
+              lifeStyle={profile.lifestyle?.diet || "N/A"}
+              // Contact Details
+              country={profile.contactInformation?.address.country || "N/A"}
+              district={profile.contactInformation?.address.district || "N/A"}
+              state={profile.contactInformation?.address.State || "N/A"}
+              residentialAddress={
+                profile.contactInformation?.address.residentialAddress || "N/A"
+              }
+              ParemamnetAddress={
+                profile.contactInformation?.address.paremamnetAddress || "N/A"
+              }
+              phone={profile.contactInformation?.contactNumber || "N/A"}
+              facebookUrl={profile.contactInformation?.FacebookUrl || "N/A"}
+              instagramUrl={profile.contactInformation?.InstagramUrl || "N/A"}
+              linkedInUrl={profile.contactInformation?.LinkedInUrl || "N/A"}
+            />
+            <KundaliCard
+            //isPreview={isPreviewPage}
+            //images={kundaliPhotos} // Use the fetched images here
+            />
+            {edit && !isPreviewPage ? (
               <Link to={`/edit-profile/670a7ed298b8c120621d87a0`}>
                 <button>Edit</button>
               </Link>
@@ -116,6 +145,7 @@ const ViewProfile = ({ edit = true }) => {
           </div>
         ))
       )}
+      {!edit ? <Footer /> : ""}
     </div>
   );
 };

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import apiRequest from "../../utils/api"; // Assuming this is a custom API utility
 import { useNavigate, useParams } from "react-router-dom";
+import CustomButton from "../../Atoms/CustomButton";
 
 const UpdateProfile = () => {
-  const { userId = "6708dd4386ad31e623c61354" } = useParams(); // Get user ID from the route
+  const { userId } = useParams(); // Get user ID from the route
   const navigate = useNavigate();
   
   const [profileData, setProfileData] = useState({
@@ -111,6 +112,7 @@ const UpdateProfile = () => {
       
       <div>
         <h3>Personal Details</h3>
+        <label>First Name:</label>
         <input
           type="text"
           name="firstName"
@@ -119,6 +121,7 @@ const UpdateProfile = () => {
           onChange={(e) => handleChange(e, 'personalDetails')}
           required
         />
+        <label>Last Name:</label>
         <input
           type="text"
           name="lastName"
@@ -127,6 +130,7 @@ const UpdateProfile = () => {
           onChange={(e) => handleChange(e, 'personalDetails')}
           required
         />
+        <label>Age:</label>
         <input
           type="number"
           name="age"
@@ -135,6 +139,7 @@ const UpdateProfile = () => {
           onChange={(e) => handleChange(e, 'personalDetails')}
           required
         />
+        <label>Gender:</label>
         <select
           name="gender"
           value={profileData.personalDetails.gender}
@@ -146,6 +151,7 @@ const UpdateProfile = () => {
           <option value="Female">Female</option>
           <option value="Other">Other</option>
         </select>
+        <label>Blood Group</label>
         <select
           name="bloodGroup"
           value={profileData.personalDetails.bloodGroup}
@@ -162,6 +168,7 @@ const UpdateProfile = () => {
           <option value="O Positive (O+)">O Positive (O+)</option>
           <option value="O Negative (O-)">O Negative (O-)</option>
         </select>
+        <label>Complexion</label>
         <select
           name="complexion"
           value={profileData.personalDetails.complexion}
@@ -174,6 +181,7 @@ const UpdateProfile = () => {
           <option value="Dusky">Dusky</option>
           <option value="Dark">Dark</option>
         </select>
+        <label>Height</label>
         <select
           name="height"
           value={profileData.personalDetails.height}
@@ -181,11 +189,32 @@ const UpdateProfile = () => {
           required
         >
           <option value="">Select Height</option>
-          {/* Add more height options as needed */}
-          <option value="5'0''">5'0''</option>
-          <option value="5'5''">5'5''</option>
-          <option value="6'0''">6'0''</option>
-        </select>
+            <option value="4'5''">4'5''</option>
+            <option value="4'6''">4'6''</option>
+            <option value="4'7''">4'7''</option>
+            <option value="4'8''">4'8''</option>
+            <option value="4'9''">4'9''</option>
+            <option value="4'10''">4'10''</option>
+            <option value="4'11''">4'11''</option>
+            <option value="5'0''">5'0''</option>
+            <option value="5'1''">5'1''</option>
+            <option value="5'2''">5'2''</option>
+            <option value="5'3''">5'3''</option>
+            <option value="5'4''">5'4''</option>
+            <option value="5'5''">5'5''</option>
+            <option value="5'6''">5'6''</option>
+            <option value="5'7''">5'7''</option>
+            <option value="5'8''">5'8''</option>
+            <option value="5'9''">5'9''</option>
+            <option value="5'10''">5'10''</option>
+            <option value="5'11''">5'11''</option>
+            <option value="6'1''">6'1''</option>
+            <option value="6'2''">6'2''</option>
+            <option value="6'3''">6'3''</option>
+            <option value="6'4''">6'4''</option>
+            <option value="6'5''">6'5''</option>
+          </select>
+        <label>Weight</label>
         <input
           type="number"
           name="weight"
@@ -198,6 +227,7 @@ const UpdateProfile = () => {
 
       <div>
         <h3>Religious Background</h3>
+        <label>Religion:</label>
         <input
           type="text"
           name="religion"
@@ -206,6 +236,7 @@ const UpdateProfile = () => {
           onChange={(e) => handleChange(e, 'religiousBackground')}
           required
         />
+        <label>Caste:</label>
         <input
           type="text"
           name="caste"
@@ -213,6 +244,7 @@ const UpdateProfile = () => {
           value={profileData.religiousBackground.caste}
           onChange={(e) => handleChange(e, 'religiousBackground')}
         />
+        <label>Sub Caste:</label>
         <input
           type="text"
           name="subCaste"
@@ -220,6 +252,7 @@ const UpdateProfile = () => {
           value={profileData.religiousBackground.subCaste}
           onChange={(e) => handleChange(e, 'religiousBackground')}
         />
+        <label>Language:</label>
         <input
           type="text"
           name="language"
@@ -232,6 +265,7 @@ const UpdateProfile = () => {
 
       <div>
         <h3>Astrological Details</h3>
+        <label>Date Of Birth:</label>
         <input
           type="date"
           name="dateOfBirth"
@@ -239,6 +273,7 @@ const UpdateProfile = () => {
           onChange={(e) => handleChange(e, 'astroDetails')}
           required
         />
+        <label>Place Of Birth:</label>
         <input
           type="text"
           name="placeOfBirth"
@@ -247,6 +282,7 @@ const UpdateProfile = () => {
           onChange={(e) => handleChange(e, 'astroDetails')}
           required
         />
+        <label>Time Of Birth:</label>
         <input
           type="text"
           name="timeOfBirth"
@@ -254,6 +290,7 @@ const UpdateProfile = () => {
           value={profileData.astroDetails.timeOfBirth}
           onChange={(e) => handleChange(e, 'astroDetails')}
         />
+        <label>Rashi:</label>
         <input
           type="text"
           name="rashi"
@@ -262,6 +299,7 @@ const UpdateProfile = () => {
           onChange={(e) => handleChange(e, 'astroDetails')}
           required
         />
+        <label>Nakshatra:</label>
         <input
           type="text"
           name="nakshatra"
@@ -269,6 +307,7 @@ const UpdateProfile = () => {
           value={profileData.astroDetails.nakshatra}
           onChange={(e) => handleChange(e, 'astroDetails')}
         />
+        <label>Gotra:</label>
         <input
           type="text"
           name="gotra"
@@ -281,6 +320,7 @@ const UpdateProfile = () => {
 
       <div>
         <h3>Family Details</h3>
+        <label>Father Name:</label>
         <input
           type="text"
           name="fatherName"
@@ -289,6 +329,7 @@ const UpdateProfile = () => {
           onChange={(e) => handleChange(e, 'familyDetails')}
           required
         />
+        <label>Mother Name:</label>
         <input
           type="text"
           name="motherName"
@@ -297,6 +338,7 @@ const UpdateProfile = () => {
           onChange={(e) => handleChange(e, 'familyDetails')}
           required
         />
+        <label>Father Occupation:</label>
         <input
           type="text"
           name="fatherOccupation"
@@ -304,6 +346,7 @@ const UpdateProfile = () => {
           value={profileData.familyDetails.fatherOccupation}
           onChange={(e) => handleChange(e, 'familyDetails')}
         />
+        <label>Mother Occupation:</label>
         <input
           type="text"
           name="motherOccupation"
@@ -311,6 +354,7 @@ const UpdateProfile = () => {
           value={profileData.familyDetails.motherOccupation}
           onChange={(e) => handleChange(e, 'familyDetails')}
         />
+        <label>No Of Brothers:</label>
         <input
           type="number"
           name="noOfBrothers"
@@ -318,6 +362,7 @@ const UpdateProfile = () => {
           value={profileData.familyDetails.noOfBrothers}
           onChange={(e) => handleChange(e, 'familyDetails')}
         />
+        <label>No Of Sisters:</label>
         <input
           type="number"
           name="noOfSisters"
@@ -329,6 +374,7 @@ const UpdateProfile = () => {
 
       <div>
         <h3>Education Details</h3>
+        <label>Degree:</label>
         <input
           type="text"
           name="degree"
@@ -336,6 +382,7 @@ const UpdateProfile = () => {
           value={profileData.educationDetails.degree}
           onChange={(e) => handleChange(e, 'educationDetails')}
         />
+        <label>Collage Name:</label>
         <input
           type="text"
           name="collegeName"
@@ -347,6 +394,7 @@ const UpdateProfile = () => {
 
       <div>
         <h3>Career Details</h3>
+        <label>Employed In:</label>
         <input
           type="text"
           name="employedIn"
@@ -354,6 +402,7 @@ const UpdateProfile = () => {
           value={profileData.careerDetails.employedIn}
           onChange={(e) => handleChange(e, 'careerDetails')}
         />
+        <label>Company Name:</label>
         <input
           type="text"
           name="companyName"
@@ -361,6 +410,7 @@ const UpdateProfile = () => {
           value={profileData.careerDetails.companyName}
           onChange={(e) => handleChange(e, 'careerDetails')}
         />
+        <label>Designation:</label>
         <input
           type="text"
           name="designation"
@@ -368,6 +418,7 @@ const UpdateProfile = () => {
           value={profileData.careerDetails.designation}
           onChange={(e) => handleChange(e, 'careerDetails')}
         />
+        <label>Income:</label>
         <input
           type="number"
           name="income"
@@ -379,6 +430,7 @@ const UpdateProfile = () => {
 
       <div>
         <h3>Lifestyle</h3>
+        <label>Diet:</label>
         <select
           name="diet"
           value={profileData.lifestyle.diet}
@@ -394,6 +446,7 @@ const UpdateProfile = () => {
 
       <div>
         <h3>Contact Information</h3>
+        <label>Contact Number:</label>
         <input
           type="text"
           name="contactNumber"
@@ -403,6 +456,7 @@ const UpdateProfile = () => {
           required
         />
         <h4>Address</h4>
+        <label>Country:</label>
         <input
           type="text"
           name="country"
@@ -411,6 +465,7 @@ const UpdateProfile = () => {
           onChange={(e) => handleChange(e, 'contactInformation.address')}
           required
         />
+        <label>State:</label>
         <input
           type="text"
           name="state"
@@ -419,6 +474,7 @@ const UpdateProfile = () => {
           onChange={(e) => handleChange(e, 'contactInformation.address')}
           required
         />
+        <label>District:</label>
         <input
           type="text"
           name="district"
@@ -427,6 +483,7 @@ const UpdateProfile = () => {
           onChange={(e) => handleChange(e, 'contactInformation.address')}
           required
         />
+        <label>Residential Address:</label>
         <input
           type="text"
           name="residentialAddress"
@@ -435,6 +492,7 @@ const UpdateProfile = () => {
           onChange={(e) => handleChange(e, 'contactInformation.address')}
           required
         />
+        <label>Paramanent Address:</label>
         <input
           type="text"
           name="permanentAddress"
@@ -443,6 +501,7 @@ const UpdateProfile = () => {
           onChange={(e) => handleChange(e, 'contactInformation.address')}
           required
         />
+        <label>LinkedIn Url:</label>
         <input
           type="text"
           name="linkedInUrl"
@@ -450,6 +509,7 @@ const UpdateProfile = () => {
           value={profileData.contactInformation.linkedInUrl}
           onChange={(e) => handleChange(e, 'contactInformation')}
         />
+        <label>Instagram Url:</label>
         <input
           type="text"
           name="instagramUrl"
@@ -457,6 +517,7 @@ const UpdateProfile = () => {
           value={profileData.contactInformation.instagramUrl}
           onChange={(e) => handleChange(e, 'contactInformation')}
         />
+        <label>Facebook Url:</label>
         <input
           type="text"
           name="facebookUrl"
@@ -466,7 +527,7 @@ const UpdateProfile = () => {
         />
       </div>
 
-      <button type="submit">Update Profile</button>
+      <CustomButton label="Update" type="primary">Update Profile</CustomButton>
     </form>
   );
 };

@@ -12,6 +12,7 @@ import MultiStepForm from "./Pages/Profile/AddProfile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import UpdateProfile from "./Pages/Profile/EditProfile";
 import ViewProfile from "./Pages/Profile/ViewProfile";
+import Payment from "./Pages/Payment/Payment";
 
 const App = () => {
   return (
@@ -36,6 +37,7 @@ const App = () => {
           <Route path="/view-profile" element={<ViewProfile />} />
           <Route path="/view-profile/:id" element={<ViewProfile edit={true} />} />
           <Route path="/user-profile/:id" element={<ViewProfile edit={false} />} />
+          <Route path="/payment" element={<Payment/>} />
         </Routes>
       </div>
     </Router>

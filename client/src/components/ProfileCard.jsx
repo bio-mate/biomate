@@ -7,7 +7,17 @@ import {
 import { Spinner } from "react-bootstrap"; // Import Spinner from Bootstrap
 import axios from "axios"; // Import axios for API calls
 
-const ProfileCard = ({ userId }) => {
+const ProfileCard = ({
+  userId,
+  name,
+  age,
+  location,
+  profession,
+  company,
+  facebookUrl,
+  instagramUrl,
+  linkedInUrl,
+}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true); // State for tracking loading
   const [profileData, setProfileData] = useState(null); // State for profile data
@@ -17,7 +27,9 @@ const ProfileCard = ({ userId }) => {
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/api/profile/viewProfile/${userId}`);
+        const response = await axios.get(
+          `http://localhost:4000/api/profile/viewProfile/${userId}`
+        );
         setProfileData(response.data); // Set profile data in state
       } catch (error) {
         console.error("Error fetching profile data:", error);
@@ -57,7 +69,10 @@ const ProfileCard = ({ userId }) => {
   // If still loading, show spinner
   if (loading) {
     return (
-      <div className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "100vh" }}
+      >
         <Spinner animation="border" variant="light" />
       </div>
     );
@@ -67,8 +82,6 @@ const ProfileCard = ({ userId }) => {
   if (!profileData) {
     return <div>No profile data found.</div>;
   }
-
-  const { name, age, location, profession, company, facebookUrl, instagramUrl, linkedInUrl } = profileData;
 
   // Functions to handle image navigation
   const handleNext = () => {
@@ -86,10 +99,13 @@ const ProfileCard = ({ userId }) => {
   const goToSlide = (index) => {
     setCurrentIndex(index);
   };
-console.log("profileData", profileData)
+
   return (
-    <div className="text-white mb-4" style={{ width: "100%", height: "100vh", position: "relative" }}>
-      {preloadedImages.length > 0 && ( // Ensure there are preloaded images to display
+    <div
+      className="text-white mb-4"
+      style={{ width: "100%", height: "100vh", position: "relative" }}
+    >
+      {preloadedImages.length >= 0 && ( // Ensure there are preloaded images to display
         <div
           style={{
             backgroundImage: `url(${preloadedImages[currentIndex]})`,
@@ -102,33 +118,93 @@ console.log("profileData", profileData)
           }}
         >
           {/* Overlay for the text at the bottom */}
-          <div className="d-flex flex-column justify-content-center p-3 bg-dark bg-opacity-75" style={{ position: "absolute", bottom: "0", left: "0", width: "100%" }}>
-            <h2 className="card-title mb-1">{name}, {age}</h2>
+          <div
+            className="d-flex flex-column justify-content-center p-3 bg-dark bg-opacity-75"
+            style={{
+              position: "absolute",
+              bottom: "0",
+              left: "0",
+              width: "100%",
+            }}
+          >
+            <h2 className="card-title mb-1">
+              {name}, {age}
+            </h2>
             <p className="card-text mb-1">
-              <img src="/placeholder.png" width={"20px"} height={"20px"} style={{ margin: "5px" }} alt="location" />
+              <img
+                src="../placeholder.png"
+                width={"20px"}
+                height={"20px"}
+                style={{ margin: "5px" }}
+                alt="location"
+              />
               {location}
             </p>
             <p className="card-text">
-              <img src="/office.png" width={"20px"} height={"20px"} style={{ margin: "5px" }} alt="profession" />
+              <img
+                src="../office.png"
+                width={"20px"}
+                height={"20px"}
+                style={{ margin: "5px" }}
+                alt="profession"
+              />
               {profession} at {company}
             </p>
             <div className="d-flex">
-              {instagramUrl && <img src="/instagram.png" width={"40px"} height={"40px"} style={{ marginRight: "10px" }} alt="Instagram" onClick={() => window.open(instagramUrl, "_blank")} />}
-              {facebookUrl && <img src="/facebook.png" width={"40px"} height={"40px"} style={{ marginRight: "10px" }} alt="Facebook" onClick={() => window.open(facebookUrl, "_blank")} />}
-              {linkedInUrl && <img src="/linkedin.png" width={"40px"} height={"40px"} style={{ marginRight: "10px" }} alt="LinkedIn" onClick={() => window.open(linkedInUrl, "_blank")} />}
+              {instagramUrl && (
+                <img
+                  src="../instagram.png"
+                  width={"40px"}
+                  height={"40px"}
+                  style={{ marginRight: "10px" }}
+                  alt="Instagram"
+                  onClick={() => window.open(instagramUrl, "_blank")}
+                />
+              )}
+              {facebookUrl && (
+                <img
+                  src="../facebook.png"
+                  width={"40px"}
+                  height={"40px"}
+                  style={{ marginRight: "10px" }}
+                  alt="Facebook"
+                  onClick={() => window.open(facebookUrl, "_blank")}
+                />
+              )}
+              {linkedInUrl && (
+                <img
+                  src="../linkedin.png"
+                  width={"40px"}
+                  height={"40px"}
+                  style={{ marginRight: "10px" }}
+                  alt="LinkedIn"
+                  onClick={() => window.open(linkedInUrl, "_blank")}
+                />
+              )}
             </div>
           </div>
 
           {/* Navigation Buttons */}
-          <div className="position-absolute" style={{ top: "50%", right: "10px", fontSize: "30px" }} onClick={handleNext}>
+          <div
+            className="position-absolute"
+            style={{ top: "50%", right: "10px", fontSize: "30px" }}
+            onClick={handleNext}
+          >
             <IoIosArrowDroprightCircle />
           </div>
-          <div className="position-absolute" style={{ top: "50%", left: "10px", fontSize: "30px" }} onClick={handlePrev}>
+          <div
+            className="position-absolute"
+            style={{ top: "50%", left: "10px", fontSize: "30px" }}
+            onClick={handlePrev}
+          >
             <IoIosArrowDropleftCircle />
           </div>
 
           {/* Dots for navigation */}
-          <div className="d-flex justify-content-center" style={{ position: "absolute", bottom: "10px", width: "100%" }}>
+          <div
+            className="d-flex justify-content-center"
+            style={{ position: "absolute", bottom: "10px", width: "100%" }}
+          >
             {preloadedImages.map((_, index) => (
               <div
                 key={index}

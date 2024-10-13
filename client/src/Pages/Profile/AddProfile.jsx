@@ -5,6 +5,9 @@ import { v4 as uuidv4 } from "uuid";
 import { useNavigate } from "react-router-dom";
 import InputField from "../../Atoms/InputField";
 import CustomButton from "../../Atoms/CustomButton";
+import ProgressBar from "../../Atoms/ProgressBar";
+import PhotoUpload from "../../Atoms/PhotoUpload";
+import UserPreviewPage from "./UserPreviewPage";
 
 const MultiStepForm = () => {
   const [step, setStep] = useState(1);
@@ -79,8 +82,19 @@ const MultiStepForm = () => {
     profileImages: [],
     kundaliImages: [],
   });
-  const [profileData, setProfileData] = useState([])
-
+  const [profileData, setProfileData] = useState([]);
+  const titles = [
+    "Personal",
+    "Religious",
+    "Astro",
+    "Family",
+    "Edu & Career",
+    "Lifestyle",
+    "Contact",
+    "Upload Photo",
+    "Upload Photo",
+    "Upload Photo",
+  ];
   const navigate = useNavigate();
   const handleNext = () => {
     setStep(step + 1);
@@ -210,8 +224,15 @@ const MultiStepForm = () => {
   const handleImageUpload = (e, type) => {
     const files = Array.from(e.target.files);
     const validFiles = files.filter((file) => file.size <= 3 * 1024 * 1024); // 3 MB size limit
-    if (validFiles.length + profileData[type].length > (type === 'profileImages' ? 5 : 3)) {
-      alert(`You can upload a maximum of ${type === 'profileImages' ? 5 : 3} images.`);
+    if (
+      validFiles.length + profileData[type].length >
+      (type === "profileImages" ? 5 : 3)
+    ) {
+      alert(
+        `You can upload a maximum of ${
+          type === "profileImages" ? 5 : 3
+        } images.`
+      );
       return;
     }
     const newImages = validFiles.map((file) => URL.createObjectURL(file));
@@ -224,37 +245,38 @@ const MultiStepForm = () => {
       [type]: [...prev[type], ...newImages],
     }));
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+    setStep(step + 1);
+
     const formData = new FormData();
     // Append user data to FormData
-    formData.append('userId', uuidv4());
-    formData.append('personalDetails', JSON.stringify(personalDetails));
-    formData.append('religiousBackground', JSON.stringify(religiousBackground));
-    formData.append('astroDetails', JSON.stringify(astroDetails));
-    formData.append('familyDetails', JSON.stringify(familyDetails));
-    formData.append('educationDetails', JSON.stringify(educationDetails));
-    formData.append('careerDetails', JSON.stringify(careerDetails));
-    formData.append('lifestyle', JSON.stringify(lifestyle));
-    formData.append('contactInformation', JSON.stringify(contactInformation));
-  
+    formData.append("userId", uuidv4());
+    formData.append("personalDetails", JSON.stringify(personalDetails));
+    formData.append("religiousBackground", JSON.stringify(religiousBackground));
+    formData.append("astroDetails", JSON.stringify(astroDetails));
+    formData.append("familyDetails", JSON.stringify(familyDetails));
+    formData.append("educationDetails", JSON.stringify(educationDetails));
+    formData.append("careerDetails", JSON.stringify(careerDetails));
+    formData.append("lifestyle", JSON.stringify(lifestyle));
+    formData.append("contactInformation", JSON.stringify(contactInformation));
+
     // Append images
     profileData.profileImages.forEach((file) => {
-      formData.append('profileImages', file);
+      formData.append("profileImages", file);
     });
     profileData.kundaliImages.forEach((file) => {
-      formData.append('kundaliImages', file);
+      formData.append("kundaliImages", file);
     });
-  
+
     try {
       const response = await apiRequest(
         "POST",
         "http://localhost:4000/api/profile/addProfile",
         formData,
         {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         }
       );
       if (response.status === 201) {
@@ -265,12 +287,14 @@ const MultiStepForm = () => {
     }
     // navigate(`/view-profile/${userId}`);
   };
-  
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} enctype="multipart/form-data">
       {step === 1 && (
         <div>
+          <ProgressBar currentStep={step} titles={titles} />
           <h2>Personal Details</h2>
+
           <input
             type="text"
             placeholder="First Name"
@@ -403,16 +427,13 @@ const MultiStepForm = () => {
             }
             required
           />
-          <CustomButton
-            label="Next"
-            onClick={handleNext}
-            type="primary"
-          />
+          <CustomButton label="Next" type="primary" onClick={handleNext} />
         </div>
       )}
 
       {step === 2 && (
         <div>
+          <ProgressBar currentStep={step} titles={titles} />
           <h2>Religious Background</h2>
           <input
             type="text"
@@ -460,21 +481,23 @@ const MultiStepForm = () => {
             }
             required
           />
-           <CustomButton
+          <CustomButton
             label="Back"
             onClick={handlePrevious}
-            type="secondary" // Red button
+            type="secondary"
+            
           />
           <CustomButton
-            label="Next"
+            label="Next" type="primary"
             onClick={handleNext}
-            type="primary" // Green button
+            
           />
         </div>
       )}
 
       {step === 3 && (
         <div>
+          <ProgressBar currentStep={step} titles={titles} />
           <h2>Astrological Details</h2>
           <input
             type="date"
@@ -556,25 +579,27 @@ const MultiStepForm = () => {
             }
             required
           />
-          <button
-            type="button"
+          <CustomButton
+            label="Back"
             className="btn btn-success"
             onClick={handlePrevious}
+            type="secondary"
           >
             Back
-          </button>
-          <button
-            type="button"
+          </CustomButton>
+          <CustomButton
+            label="Next" type="primary"
             className="btn btn-success"
             onClick={handleNext}
           >
             Next
-          </button>
+          </CustomButton>
         </div>
       )}
 
       {step === 4 && (
         <div>
+          <ProgressBar currentStep={step} titles={titles} />
           <h2>Education Details</h2>
           <input
             type="text"
@@ -601,17 +626,18 @@ const MultiStepForm = () => {
             required
           />
 
-          <button type="button" onClick={handlePrevious}>
+          <CustomButton label="Back" onClick={handlePrevious} type="secondary">
             Back
-          </button>
-          <button type="button" onClick={handleNext}>
+          </CustomButton>
+          <CustomButton label="Next" type="primary" onClick={handleNext}>
             Next
-          </button>
+          </CustomButton>
         </div>
       )}
 
       {step === 5 && (
         <div>
+          <ProgressBar currentStep={step} titles={titles} />
           <h2>Career Details</h2>
 
           <select
@@ -675,17 +701,18 @@ const MultiStepForm = () => {
             <option value="20-25 LPA">20-25 LPA</option>
             <option value="more than 25 LPA">more than 25 LPA</option>
           </select>
-          <button type="button" onClick={handlePrevious}>
+          <CustomButton label="Back" onClick={handlePrevious} type="secondary">
             Back
-          </button>
-          <button type="button" onClick={handleNext}>
+          </CustomButton>
+          <CustomButton label="Next" type="primary" onClick={handleNext}>
             Next
-          </button>
+          </CustomButton>
         </div>
       )}
 
       {step === 6 && (
         <div>
+          <ProgressBar currentStep={step} titles={titles} />
           <h2>Family Details</h2>
           <input
             type="text"
@@ -757,17 +784,18 @@ const MultiStepForm = () => {
               })
             }
           />
-          <button type="button" onClick={handlePrevious}>
+          <CustomButton label="Back" onClick={handlePrevious} type="secondary">
             Back
-          </button>
-          <button type="button" onClick={handleNext}>
+          </CustomButton>
+          <CustomButton label="Next" type="primary" onClick={handleNext}>
             Next
-          </button>
+          </CustomButton>
         </div>
       )}
 
       {step === 7 && (
         <div>
+          <ProgressBar currentStep={step} titles={titles} />
           <h2>Lifestyle</h2>
           <select
             value={lifestyle.diet}
@@ -783,17 +811,18 @@ const MultiStepForm = () => {
             <option value="vegan">Vegan</option>
             <option value="occasionallyNon-Veg">Occasionally Non-Veg</option>
           </select>
-          <button type="button" onClick={handlePrevious}>
+          <CustomButton label="Back" onClick={handlePrevious} type="secondary">
             Back
-          </button>
-          <button type="button" onClick={handleNext}>
+          </CustomButton>
+          <CustomButton label="Next" type="primary" onClick={handleNext}>
             Next
-          </button>
+          </CustomButton>
         </div>
       )}
 
       {step === 8 && (
         <div>
+          <ProgressBar currentStep={step} titles={titles} />
           <h2>Contact Information</h2>
 
           <input
@@ -925,82 +954,108 @@ const MultiStepForm = () => {
             }
           />
 
-          <button type="button" onClick={handlePrevious}>
+          <CustomButton label="Back" onClick={handlePrevious} type="secondary">
             Back
-          </button>
-          <button type="button" onClick={handleNext}>
+          </CustomButton>
+          <CustomButton label="Next" type="primary" onClick={handleNext}>
             Next
-          </button>
+          </CustomButton>
         </div>
       )}
 
       {step === 9 && (
         <div>
-          <h3>Profile Images</h3>
-          <input
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={(e) => handleImageUpload(e, "profileImages")}
-          />
-          <div style={{ display: "flex", flexWrap: "wrap" }}>
-            {imagePreviews.profileImages.map((image, index) => (
-              <div key={index} style={{ position: "relative", margin: "5px" }}>
-                <img
-                  src={image}
-                  alt="Profile Preview"
-                  style={{ width: "100px", height: "100px" }}
-                />
-                <button
-                  //onClick={() => removeImage("profileImages", index)}
-                  style={{ position: "absolute", top: 0, right: 0 }}
-                >
-                  X
-                </button>
-              </div>
-            ))}
-          </div>
-          <button type="button" onClick={handlePrevious}>
-            Back
-          </button>
-          <button type="button" onClick={handleNext}>
-            Next
-          </button>
+        <ProgressBar currentStep={step} titles={titles} />
+        <h3>Profile Images (At least 1 required)</h3>
+        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+          {Array.from({ length: 5 }).map((_, index) => (
+            <PhotoUpload key={index} onUpload={(e) => handleImageUpload(e)} />
+          ))}
         </div>
+        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+          {imagePreviews.profileImages.map((image, index) => (
+            <div key={index} style={{ position: 'relative', margin: '5px' }}>
+              <img
+                src={image}
+                alt="Profile Preview"
+                style={{ width: '100px', height: '100px' }}
+              />
+              <CustomButton
+                //onClick={() => removeImage(index)}
+                style={{ position: 'absolute', top: 0, right: 0 }}
+              >
+                X
+              </CustomButton>
+            </div>
+          ))}
+        </div>
+        <CustomButton
+          label="Back"
+          onClick={handlePrevious}
+          type="secondary"
+          disabled={imagePreviews.profileImages.length === 0}
+        >
+          Back
+        </CustomButton>
+        <CustomButton
+          label="Next"
+          type="primary"
+          onClick={handleNext}
+          disabled={imagePreviews.profileImages.length < 1}
+        >
+          Next
+        </CustomButton>
+      </div>
       )}
 
       {step === 10 && (
         <div>
-          <h3>Kundali Images</h3>
-          <input
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={(e) => handleImageUpload(e, "kundaliImages")}
-          />
-          <div style={{ display: "flex", flexWrap: "wrap" }}>
-            {imagePreviews.kundaliImages.map((image, index) => (
-              <div key={index} style={{ position: "relative", margin: "5px" }}>
-                <img
-                  src={image}
-                  alt="Kundali Preview"
-                  style={{ width: "100px", height: "100px" }}
-                />
-                <button
-                  //onClick={() => removeImage("kundaliImages", index)}
-                  style={{ position: "absolute", top: 0, right: 0 }}
-                >
-                  X
-                </button>
-              </div>
-            ))}
-          </div>
-          <button type="button" onClick={handlePrevious}>
-            Back
-          </button>
-          <button type="submit">Submit</button>
+        <ProgressBar currentStep={step} titles={titles} />
+        <h3>Kundali Images</h3>
+        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+          {Array.from({ length: 3 }).map((_, index) => (
+            <PhotoUpload key={index} onUpload={(e) => handleImageUpload(e)} />
+          ))}
         </div>
+        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+          {imagePreviews.kundaliImages.map((image, index) => (
+            <div key={index} style={{ position: 'relative', margin: '5px' }}>
+              <img
+                src={image}
+                alt="Kundali Preview"
+                style={{ width: '100px', height: '100px' }}
+              />
+              <CustomButton
+                //onClick={() => removeImage(index)}
+                style={{ position: 'absolute', top: 0, right: 0 }}
+              >
+                X
+              </CustomButton>
+            </div>
+          ))}
+        </div>
+        <CustomButton label="Back" onClick={handlePrevious} type="secondary">
+          Back
+        </CustomButton>
+        <CustomButton
+          label="Preview"
+          onClick={handleSubmit}
+          disabled={imagePreviews.kundaliImages.length > 3}
+          type="primary"
+        >
+          Preview
+        </CustomButton>
+      </div>
       )}
+      {step === 11 && (
+        <div>
+           <ProgressBar currentStep={step} titles={titles} />
+           <h3>Preview</h3>
+        <UserPreviewPage/>
+         
+        </div>
+        )}
+      
     </form>
   );
 };

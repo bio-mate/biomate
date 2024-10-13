@@ -1,6 +1,6 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../styles/CustomButton.css'; // Optional custom styles
+import '../styles/InputField.css'; // Optional custom styles
 
 const CustomButton = ({ 
   label, 

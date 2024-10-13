@@ -7,7 +7,7 @@ import EditProfileForm from './Profile/EditProfile'
 
 const Home = () => {
   return (
-    <div>home
+    <div>
 
         <MultiStepForm/>
     </div>
