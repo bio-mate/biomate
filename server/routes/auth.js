@@ -11,6 +11,7 @@ const router = express.Router();
 // Validation schemas
 const signupSchema = Joi.object({
   name: Joi.string().required(),
+  username :Joi.string().required(),
   email: Joi.string().email().required(),
   mobile: Joi.string().required(),
   password: Joi.string().min(6).required(),
@@ -28,11 +29,16 @@ const forgotPasswordSchema = Joi.object({
 
 // Signup route
 router.post('/signup', async (req, res) => {
-  const { name, email, mobile, password, confirmPassword } = req.body;
+  const { name, email, mobile, password, confirmPassword, username } = req.body;
 
   // Validate input
   const { error } = signupSchema.validate(req.body);
   if (error) return res.status(400).json({ message: error.details[0].message });
+
+  // Ensure passwords match
+  if (password !== confirmPassword) {
+    return res.status(400).json({ message: "Passwords do not match." });
+  }
 
   try {
     // Normalize the email to lowercase
@@ -49,8 +55,9 @@ router.post('/signup', async (req, res) => {
 
     // Create a new user
     const newUser = new User({
-      name, // Use name directly
-      email: normalizedEmail, // Store normalized email
+      name,
+      username,
+      email: normalizedEmail,
       mobile,
       password: hashedPassword,
     });

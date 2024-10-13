@@ -11,9 +11,9 @@ const ViewProfile = ({ edit = true, isPreviewPage }) => {
   const { user } = useAuth(); // Get the logged-in user from context
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
-  const photos = "../logo512.png";
+  const [photos, setPhotos] = useState([]);
   const [error, setError] = useState(null);
-  console.log("user", user);
+  const profileId = "670a7ed298b8c120621d87a0";
   useEffect(() => {
     const fetchProfiles = async () => {
       try {
@@ -32,6 +32,25 @@ const ViewProfile = ({ edit = true, isPreviewPage }) => {
     fetchProfiles();
   }, []);
 
+  //   useEffect(() => {
+  //     const fetchImages = async () => {
+  //       try {
+  //         const response = await fetch(`/api/profile/${profileId}/images`);
+  //         if (!response.ok) {
+  //           throw new Error('Failed to fetch images');
+  //         }
+  //         const data = await response.json();
+  //         setPhotos(data.images); // Assuming your API returns { images: [...] }
+  //       } catch (err) {
+  //         setError(err.message);
+  //       } finally {
+  //         setLoading(false);
+  //       }
+  //     };
+
+  //     fetchImages();
+  //   }, [profileId]);
+
   if (loading) {
     return <div>Loading profiles...</div>;
   }
@@ -40,9 +59,9 @@ const ViewProfile = ({ edit = true, isPreviewPage }) => {
     return <div>{error}</div>;
   }
   console.log("profiles.firstName", profiles.personalDetails?.firstName);
+  console.log("setPhotos", profiles);
   return (
     <div>
-      <h2>Profiles</h2>
       {profiles.length === 0 ? (
         <p>No profiles available.</p>
       ) : (
@@ -50,7 +69,7 @@ const ViewProfile = ({ edit = true, isPreviewPage }) => {
           <div key={profile.userId}>
             <div className="min-h-screen bg-gray-100 flex items-center justify-center">
               <ProfileCard
-                userId="670a7ed298b8c120621d87a0"
+                userId="670b75e996c492112cd0a675"
                 isPreview={edit}
                 name={
                   profile.personalDetails?.firstName ||
@@ -65,7 +84,7 @@ const ViewProfile = ({ edit = true, isPreviewPage }) => {
                 }`}
                 profession={profile.careerDetails?.desiganation || "N/A"}
                 company={profile.careerDetails?.companyName || "N/A"}
-                images={photos} // Use the fetched images here
+                images={profile.profileImages.imageUrl} // Use the fetched images here
                 facebookUrl={profile.contactInformation?.facebookUrl}
                 instagramUrl={profile.contactInformation?.instagramUrl}
                 linkedInUrl={profile.contactInformation?.linkedInUrl}
@@ -131,10 +150,10 @@ const ViewProfile = ({ edit = true, isPreviewPage }) => {
               instagramUrl={profile.contactInformation?.InstagramUrl || "N/A"}
               linkedInUrl={profile.contactInformation?.LinkedInUrl || "N/A"}
             />
-            <KundaliCard
-            //isPreview={isPreviewPage}
-            //images={kundaliPhotos} // Use the fetched images here
-            />
+            {/* <KundaliCard
+            isPreview={isPreviewPage}
+            images={kundaliPhotos} // Use the fetched images here
+            /> */}
             {edit && !isPreviewPage ? (
               <Link to={`/edit-profile/670a7ed298b8c120621d87a0`}>
                 <button>Edit</button>

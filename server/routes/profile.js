@@ -2,13 +2,16 @@ const express = require("express");
 const router = express.Router();
 const Profile = require("../models/Profile"); // Import the Profile model
 const multer = require('multer');
+const path = require('path')
 
 // Configure Multer storage
 const storage = multer.memoryStorage(); // Store files in memory
 const upload = multer({ storage: storage });
 
 // POST endpoint to handle profile creation
-router.post("/addProfile", upload.fields([{ name: 'profileImages', maxCount: 5 }, { name: 'kundaliImages', maxCount: 5 }]), async (req, res) => {
+router.post("/addProfile", 
+    //upload.fields([{ name: 'profileImages', maxCount: 5 }, { name: 'kundaliImages', maxCount: 3 }]),
+     async (req, res) => {
     const {
       userId,
       personalDetails,
@@ -20,19 +23,17 @@ router.post("/addProfile", upload.fields([{ name: 'profileImages', maxCount: 5 }
       lifestyle,
       contactInformation,
     } = req.body;
-  
+
     // Validate required fields
     if (!userId || !personalDetails || !religiousBackground || !astroDetails || !familyDetails || !educationDetails || !careerDetails || !lifestyle || !contactInformation) {
-      return res.status(400).json({
-        message: "Missing required fields: userId or other profile details",
-      });
+      return res.status(400).json({ message: "Missing required fields: userId or other profile details" });
     }
-  
+
     try {
       // Get uploaded files from req.files
-      const profileImages = req.files['profileImages'] ? req.files['profileImages'].map(file => file.buffer) : [];
-      const kundaliImages = req.files['kundaliImages'] ? req.files['kundaliImages'].map(file => file.buffer) : [];
-  
+    //   const profileImages = req.files['profileImages'] ? req.files['profileImages'].map(file => ({ imageUrl: file.buffer.toString('base64') })) : [];
+    //   const kundaliImages = req.files['kundaliImages'] ? req.files['kundaliImages'].map(file => ({ imageUrl: file.buffer.toString('base64') })) : [];
+
       const newProfile = new Profile({
         userId,
         personalDetails,
@@ -43,17 +44,18 @@ router.post("/addProfile", upload.fields([{ name: 'profileImages', maxCount: 5 }
         careerDetails,
         lifestyle,
         contactInformation,
-        profileImages, // Store profile images
-        kundaliImages, // Store kundali images
+        // profileImages, // Store profile images
+        // kundaliImages, // Store kundali images
       });
-  
+
       await newProfile.save(); // Save the profile details
       res.status(201).json({ message: "Profile created successfully!", profile: newProfile });
     } catch (error) {
       console.error("Error creating profile:", error.message); // Log the error message for better debugging
       res.status(500).json({ message: "Internal server error", error: error.message });
     }
-  });
+});
+
   
 
 // GET endpoint to fetch all profiles

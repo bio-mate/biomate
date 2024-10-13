@@ -7,7 +7,6 @@ import ViewProfile from "./ViewProfile";
 const UserPreviewPage = () => {
   const [showPreview, setShowPreview] = useState(true);
   
-
   const demoPage = "https://rzp.io/rzp/90tjveeR";
   const navigate = useNavigate();
 

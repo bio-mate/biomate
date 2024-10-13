@@ -92,15 +92,15 @@ const contactInformationSchema = new mongoose.Schema({
   instagramUrl: { type: String },
   facebookUrl: { type: String },
 });
-const profileImageSchema = new mongoose.Schema({
-  imageUrl: { type: String, required: true },
-  uploadedAt: { type: Date, default: Date.now },
-});
+// const profileImageSchema = new mongoose.Schema({
+//   imageUrl: { type: String, required: true },
+//   uploadedAt: { type: Date, default: Date.now },
+// });
 
-const kundaliImageSchema = new mongoose.Schema({
-  imageUrl: { type: String, required: true },
-  uploadedAt: { type: Date, default: Date.now },
-});
+// const kundaliImageSchema = new mongoose.Schema({
+//   imageUrl: { type: String, required: true },
+//   uploadedAt: { type: Date, default: Date.now },
+// });
 const profileSchema = new mongoose.Schema({
   personalDetails: personalInfoSchema,
   religiousBackground: religiousBackgroundSchema,
@@ -110,8 +110,12 @@ const profileSchema = new mongoose.Schema({
   careerDetails: [careerDetailsSchema],
   lifestyle: lifestyleSchema,
   contactInformation: contactInformationSchema,
-  profileImages: [profileImageSchema],
-  kundaliImages: [kundaliImageSchema],
+  // profileImages: [profileImageSchema],
+  // kundaliImages: [kundaliImageSchema],
+  profileImages: {
+    type: [{ imageUrl: String }],
+    default: [], // Ensure it defaults to an empty array
+  },
 });
 
 const Profile = mongoose.model('Profile', profileSchema);

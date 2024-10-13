@@ -38,7 +38,7 @@ const Login = () => {
        // const userId = userData._id; // Access the user ID from the response
         //login(token, { ...userData, userId }); // Pass user ID along with user data
         setMessage("Login successful!");
-        navigate("/home");
+        navigate("/profile");
       }
     } catch (error) {
       handleError(error);

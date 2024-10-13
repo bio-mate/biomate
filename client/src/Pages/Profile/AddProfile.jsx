@@ -11,7 +11,7 @@ import UserPreviewPage from "./UserPreviewPage";
 
 const MultiStepForm = () => {
   const [step, setStep] = useState(1);
-  const [userId, setUserId] = useState(""); // User ID field
+  const [userId, setUserId] = useState(uuidv4()); // Generate a unique user ID
   const [personalDetails, setPersonalDetails] = useState({
     firstName: "",
     lastName: "",
@@ -20,13 +20,13 @@ const MultiStepForm = () => {
     bloodGroup: "",
     complexion: "",
     height: "",
-    weight: "", // Weight field added
+    weight: "",
   });
 
   const [religiousBackground, setReligiousBackground] = useState({
     religion: "",
-    caste: "", // Corrected from 'cast' to 'caste'
-    subCaste: "", // Corrected from 'subCast' to 'subCaste'
+    caste: "",
+    subCaste: "",
     language: "",
   });
 
@@ -50,18 +50,18 @@ const MultiStepForm = () => {
 
   const [educationDetails, setEducationDetails] = useState({
     degree: "",
-    collegeName: "", // Changed from 'institution' to 'collegeName'
+    collegeName: "",
   });
 
   const [careerDetails, setCareerDetails] = useState({
-    employedIn: "", // EmployedIn field added
+    employedIn: "",
     companyName: "",
-    designation: "", // Changed from 'jobTitle' to 'designation'
-    income: "", // Income field added
+    designation: "",
+    income: "",
   });
 
   const [lifestyle, setLifestyle] = useState({
-    diet: "", // Diet field added
+    diet: "",
   });
 
   const [contactInformation, setContactInformation] = useState({
@@ -80,9 +80,14 @@ const MultiStepForm = () => {
 
   const [imagePreviews, setImagePreviews] = useState({
     profileImages: [],
-    kundaliImages: [],
+    // kundaliImages: [],
   });
-  const [profileData, setProfileData] = useState([]);
+
+  // const [profileData, setProfileData] = useState({
+  //   profileImages: [],
+  //   kundaliImages: [],
+  // });
+
   const titles = [
     "Personal",
     "Religious",
@@ -95,7 +100,9 @@ const MultiStepForm = () => {
     "Upload Photo",
     "Upload Photo",
   ];
+
   const navigate = useNavigate();
+
   const handleNext = () => {
     setStep(step + 1);
   };
@@ -103,156 +110,39 @@ const MultiStepForm = () => {
   const handlePrevious = () => {
     setStep(step - 1);
   };
+
   // const handleImageUpload = (e, type) => {
-  //   //   const files = Array.from(e.target.files);
-  //   //   const validFiles = files.filter((file) => file.size <= 3 * 1024 * 1024); // 3 MB size limit
-  //   //   if (validFiles.length + profileData[type].length > (type === 'profileImages' ? 5 : 3)) {
-  //   //     alert(`You can upload a maximum of ${type === 'profileImages' ? 5 : 3} images.`);
-  //   //     return;
-  //   //   }
-  //   //   const newImages = validFiles.map((file) => URL.createObjectURL(file));
-  //   //   setProfileData((prevData) => ({
-  //   //     ...prevData,
-  //   //     [type]: [...prevData[type], ...validFiles],
-  //   //   }));
-  //   //   setImagePreviews((prev) => ({
-  //   //     ...prev,
-  //   //     [type]: [...prev[type], ...newImages],
-  //   //   }));
-  //   // };
-  // };
-  // const removeImage = (type, index) => {
-  //   // setProfileData((prevData) => {
-  //   //   const updatedImages = prevData[type].filter((_, i) => i !== index);
-  //   //   return { ...prevData, [type]: updatedImages };
-  //   // });
-  //   //   setImagePreviews((prev) => {
-  //   //     const updatedPreviews = prev[type].filter((_, i) => i !== index);
-  //   //     return { ...prev, [type]: updatedPreviews };
-  //   //   });
-  // };
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
+  //   const files = Array.from(e.target.files);
+  //   const validFiles = files.filter((file) => file.size <= 3 * 1024 * 1024); // 3 MB size limit
 
-  //   const payload = {
-  //     userId: uuidv4(), // Generates a unique ID
-  //     personalDetails: {
-  //       firstName: personalDetails.firstName,
-  //       lastName: personalDetails.lastName,
-  //       age: personalDetails.age,
-  //       gender: personalDetails.gender,
-  //       bloodGroup: personalDetails.bloodGroup,
-  //       complexion: personalDetails.complexion,
-  //       height: personalDetails.height,
-  //       weight: personalDetails.weight, // Include weight
-  //     },
-  //     religiousBackground: {
-  //       religion: religiousBackground.religion,
-  //       caste: religiousBackground.caste, // Corrected from 'cast' to 'caste'
-  //       subCaste: religiousBackground.subCaste, // Corrected from 'subCast' to 'subCaste'
-  //       language: religiousBackground.language,
-  //     },
-  //     astroDetails: {
-  //       dateOfBirth: astroDetails.dateOfBirth,
-  //       placeOfBirth: astroDetails.placeOfBirth,
-  //       timeOfBirth: astroDetails.timeOfBirth,
-  //       rashi: astroDetails.rashi,
-  //       nakshatra: astroDetails.nakshatra,
-  //       gotra: astroDetails.gotra,
-  //     },
-  //     familyDetails: {
-  //       fatherName: familyDetails.fatherName,
-  //       motherName: familyDetails.motherName,
-  //       fatherOccupation: familyDetails.fatherOccupation,
-  //       motherOccupation: familyDetails.motherOccupation,
-  //       noOfBrothers: familyDetails.noOfBrothers,
-  //       noOfSisters: familyDetails.noOfSisters,
-  //     },
-  //     educationDetails: {
-  //       educationDetails: [
-  //         {
-  //           degree: educationDetails.degree,
-  //           collegeName: educationDetails.collegeName,
-  //         },
-  //       ],
-  //     },
-  //     careerDetails: careerDetails.companyName // Include only if companyName is provided
-  //       ? [
-  //           {
-  //             employedIn: careerDetails.employedIn,
-  //             designation: careerDetails.designation, // Use designation as intended
-  //             companyName: careerDetails.companyName,
-  //             income: careerDetails.income, // Include income
-  //           },
-  //         ]
-  //       : [], // Ensure it defaults to an empty array if no companyName is provided
-  //     lifestyle: {
-  //       diet: lifestyle.diet, // Include diet field
-  //     },
-  //     contactInformation: {
-  //       contactNumber: contactInformation.contactNumber,
-  //       address: {
-  //         country: contactInformation.address.country,
-  //         state: contactInformation.address.state,
-  //         district: contactInformation.address.district,
-  //         residentialAddress: contactInformation.address.residentialAddress,
-  //         permanentAddress: contactInformation.address.permanentAddress,
-  //       },
-  //       linkedInUrl: contactInformation.linkedInUrl,
-  //       instagramUrl: contactInformation.instagramUrl,
-  //       facebookUrl: contactInformation.facebookUrl,
-  //     },
-  //     profileImages: [], // Array to store uploaded profile images
-  //     kundaliImages: [],
-  //   };
-
-  //   try {
-  //     const response = await apiRequest(
-  //       "POST",
-  //       "http://localhost:4000/api/profile/addProfile",
-  //       payload
-  //     );
-  //     if (response.status === 201) {
-  //       console.log(response.data.message);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error submitting form:", error);
+  //   // Check the total number of images after upload
+  //   const currentImagesCount = profileData[type]?.length || 0; // Use optional chaining to handle undefined
+  //   if (validFiles.length + currentImagesCount > (type === "profileImages" ? 5 : 3)) {
+  //     alert(`You can upload a maximum of ${type === "profileImages" ? 5 : 3} images.`);
+  //     return;
   //   }
-  //   // navigate(`/view-profile/${userId}`);
-  // };
 
-  const handleImageUpload = (e, type) => {
-    const files = Array.from(e.target.files);
-    const validFiles = files.filter((file) => file.size <= 3 * 1024 * 1024); // 3 MB size limit
-    if (
-      validFiles.length + profileData[type].length >
-      (type === "profileImages" ? 5 : 3)
-    ) {
-      alert(
-        `You can upload a maximum of ${
-          type === "profileImages" ? 5 : 3
-        } images.`
-      );
-      return;
-    }
-    const newImages = validFiles.map((file) => URL.createObjectURL(file));
-    setProfileData((prevData) => ({
-      ...prevData,
-      [type]: [...prevData[type], ...validFiles],
-    }));
-    setImagePreviews((prev) => ({
-      ...prev,
-      [type]: [...prev[type], ...newImages],
-    }));
-  };
+  //   // Create URLs for new images
+  //   const newImages = validFiles.map((file) => URL.createObjectURL(file));
+
+  //   // Update the profile data and image previews
+  //   setProfileData((prevData) => ({
+  //     ...prevData,
+  //     [type]: [...(prevData[type] || []), ...validFiles], // Fallback to empty array if undefined
+  //   }));
+
+  //   setImagePreviews((prev) => ({
+  //     ...prev,
+  //     [type]: [...(prev[type] || []), ...newImages], // Fallback to empty array if undefined
+  //   }));
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setStep(step + 1);
-
     const formData = new FormData();
+
     // Append user data to FormData
-    formData.append("userId", uuidv4());
+    formData.append("userId", userId); // Use stored userId
     formData.append("personalDetails", JSON.stringify(personalDetails));
     formData.append("religiousBackground", JSON.stringify(religiousBackground));
     formData.append("astroDetails", JSON.stringify(astroDetails));
@@ -263,12 +153,12 @@ const MultiStepForm = () => {
     formData.append("contactInformation", JSON.stringify(contactInformation));
 
     // Append images
-    profileData.profileImages.forEach((file) => {
-      formData.append("profileImages", file);
-    });
-    profileData.kundaliImages.forEach((file) => {
-      formData.append("kundaliImages", file);
-    });
+    // profileData.profileImages.forEach((file) => {
+    //   formData.append("profileImages", file);
+    // });
+    // profileData.kundaliImages.forEach((file) => {
+    //   formData.append("kundaliImages", file);
+    // });
 
     try {
       const response = await apiRequest(
@@ -281,6 +171,7 @@ const MultiStepForm = () => {
       );
       if (response.status === 201) {
         console.log(response.data.message);
+        // Optionally navigate to another page or show a success message
       }
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -288,6 +179,20 @@ const MultiStepForm = () => {
     // navigate(`/view-profile/${userId}`);
   };
 
+  const handleImageUpload = (newImage) => {
+    setImagePreviews((prev) => ({
+      ...prev,
+      profileImages: [...prev.profileImages, newImage],
+    }));
+  };
+  
+  const removeImage = (index) => {
+    setImagePreviews((prev) => ({
+      ...prev,
+      profileImages: prev.profileImages.filter((_, i) => i !== index),
+    }));
+  };
+  
   return (
     <form onSubmit={handleSubmit} enctype="multipart/form-data">
       {step === 1 && (
@@ -963,7 +868,7 @@ const MultiStepForm = () => {
         </div>
       )}
 
-      {step === 9 && (
+      {/* {step === 9 && (
         <div>
         <ProgressBar currentStep={step} titles={titles} />
         <h3>Profile Images (At least 1 required)</h3>
@@ -1046,8 +951,36 @@ const MultiStepForm = () => {
           Preview
         </CustomButton>
       </div>
-      )}
-      {step === 11 && (
+      )} */}
+
+{step === 9 && (
+  <div>
+    <ProgressBar currentStep={step} titles={titles} />
+    <h3>Profile Images (At least 1 required)</h3>
+    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+      {Array.from({ length: 5 }).map((_, index) => (
+        <PhotoUpload
+          key={index}
+          onUpload={(image) => handleImageUpload(image)}
+        />
+      ))}
+    </div>
+    <CustomButton
+      label="Back"
+      onClick={handlePrevious}
+      type="secondary"
+      disabled={imagePreviews.profileImages.length === 0}
+    />
+    <CustomButton
+      label="Next"
+      type="primary"
+      onClick={handleNext}
+      disabled={imagePreviews.profileImages.length < 1}
+    />
+  </div>
+)}
+
+      {step === 10 && (
         <div>
            <ProgressBar currentStep={step} titles={titles} />
            <h3>Preview</h3>
