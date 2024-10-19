@@ -9,7 +9,8 @@ const ProfileCard = ({ userId, name, age, location, profession, company, faceboo
   const [loading, setLoading] = useState(true);
   const [profileData, setProfileData] = useState(null);
   const [preloadedImages, setPreloadedImages] = useState([]);
-
+const [isUser, setIsUser] = useState(true)
+const [isPreview, setIsPreview] = useState(true)
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
@@ -75,6 +76,45 @@ const ProfileCard = ({ userId, name, age, location, profession, company, faceboo
 
   return (
     <div className="text-white mb-4" style={{ width: "100%", height: "100vh", position: "relative" }}>
+      <div
+              style={{ display: "flex", float: "left", margin: "20px 10px" }}
+            >
+              {isUser ? (
+                <img
+                  src="/edit.png"
+                  width={"50px"}
+                  height={"50px"}
+                  style={{ marginRight: "10px", pointerEvents: "none", zIndex:'1'}}
+                  alt="LinkedIn"
+                  //onClick={handleEdit}
+                />
+              ) : (
+                ""
+              )}
+            </div>
+            <div
+              style={{ display: "flex", float: "right", margin: "20px 0px" }}
+            >
+              {isPreview ? (
+                <img
+                  src="/share.png"
+                  width={"40px"}
+                  height={"40px"}
+                  style={{ marginRight: "10px", pointerEvents: "none", zIndex:'1' }}
+                  alt="LinkedIn"
+                  //onClick={handleShare}
+                />
+              ) : (
+                <img
+                  src="/share.png"
+                  width={"40px"}
+                  height={"40px"}
+                  style={{ marginRight: "10px", zIndex:'1' }}
+                  alt="LinkedIn"
+                  //onClick={handleShare}
+                />
+              )}
+            </div>
       {preloadedImages.length > 0 && (
         <div>
           {/* Image Slider */}

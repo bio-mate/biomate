@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { GiBodyHeight } from "react-icons/gi";
 import { IoLanguageSharp } from "react-icons/io5";
 import { colors } from "../theme/theme";
@@ -9,10 +9,9 @@ import { MdOutlineCastForEducation } from "react-icons/md";
 import { MdNightlife } from "react-icons/md";
 import { IoMdCall } from "react-icons/io";
 
-
 const SmallCard = ({ label, value }) => {
   return (
-    <div style={{ margin: "5px", padding:'5px' }} className="card">
+    <div style={{ margin: "5px", padding: "5px" }} className="card">
       <div>
         <div
           style={{
@@ -22,7 +21,12 @@ const SmallCard = ({ label, value }) => {
         >
           <p
             className="card-title"
-            style={{ fontWeight: "bold", fontSize: "16px", width: "50%", color:colors.DarkGrey }}
+            style={{
+              fontWeight: "bold",
+              fontSize: "16px",
+              width: "50%",
+              color: colors.DarkGrey,
+            }}
           >
             {label}
           </p>
@@ -30,6 +34,41 @@ const SmallCard = ({ label, value }) => {
           <p className="card-text" style={{ fontSize: "18px", width: "50%" }}>
             : {value}
           </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const SummaryDetails = ({ details }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  
+  // Concatenate details into a single string for display
+  const fullText = details.join(' ');
+
+  // Function to toggle expanded state
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  return (
+    <div className="container mt-5">
+      <h3 className="mb-4" style={{color:'rgb(254, 114, 76)'}}>What I’m Looking For</h3>
+      <div className="card shadow-lg border-light">
+        <div className="card-body" style={{textAlign:'justify'}}>
+          <p>
+            {isExpanded ? fullText : `${fullText.slice(0, 200)}...`}
+            {!isExpanded && fullText.length > 200 && (
+              <span className="cursor-pointer" style={{color:'rgb(254, 114, 76)'}} onClick={toggleExpand}>
+                {" "}Read More
+              </span>
+            )}
+          </p>
+          {isExpanded && (
+            <span className="text-primary cursor-pointer" onClick={toggleExpand}>
+              {" "}Read Less
+            </span>
+          )}
         </div>
       </div>
     </div>
@@ -44,13 +83,17 @@ const Section = ({ title, details, icon }) => {
         style={{
           background: colors.White,
           padding: "5px",
-          marginTop:'15px',
+          marginTop: "15px",
           color: colors.PlainOrange,
-          display:'flex'
+          display: "flex",
         }}
       >
-        <div style={{fontSize:'25px', marginTop:'-7px', marginRight:'5px'}}>{icon}</div>
-        
+        <div
+          style={{ fontSize: "25px", marginTop: "-7px", marginRight: "5px" }}
+        >
+          {icon}
+        </div>
+
         <h3 className="">{title}</h3>
       </div>
 
@@ -71,6 +114,7 @@ const Section = ({ title, details, icon }) => {
 
 // Main component combining all sections with their respective data
 const DetailsPage = ({
+  summary,
   religion,
   height,
   language,
@@ -121,8 +165,19 @@ const DetailsPage = ({
   state,
   noOfBrothers,
   noOfSisters,
-  subCaste
+  subCaste,
 }) => {
+  const summaryDetails = [
+    `I am seeking a partner who embodies kindness, respect, and a genuine sense of humor. Ideally, someone who is: Understanding and Supportive: I value open communication and emotional support. I appreciate a partner who listens and shares their thoughts, fostering a relationship built on trust and mutual respect.
+
+Understanding and Supportive: Values open communication and emotional connection.
+Family-Oriented: Shares strong family values and enjoys building bonds.
+Ambitious and Driven: Passionate about their goals while balancing life.
+Adventurous: Loves exploring new experiences and places.
+Caring and Compassionate: Kind-hearted and values making a positive impact.
+Respectful of Traditions: Appreciates our cultural heritage.
+  `,
+  ];
   const personalDetails = [
     {
       label: "Gender",
@@ -248,12 +303,12 @@ const DetailsPage = ({
       value: income,
     },
   ];
-const lifeStyleDetails = [
-  {
-    label: "LifeStyle",
-    value: lifeStyle,
-  },
-]
+  const lifeStyleDetails = [
+    {
+      label: "LifeStyle",
+      value: lifeStyle,
+    },
+  ];
   const contactDetails = [
     {
       label: "Phone",
@@ -280,18 +335,43 @@ const lifeStyleDetails = [
 
   return (
     <div>
-      <Section icon ={<MdAccountCircle/>} title="Personal Details" details={personalDetails} />
-      <Section icon ={<IoLanguageSharp/>} title = "Religious Background" details={religiousBackground} />
-      <Section icon ={<FaStroopwafel/>}title="Astro Details" details={astroDetails} />
-      <Section icon ={<RiHomeHeartFill/>}title="Family Details" details={familyDetails} />
+      <SummaryDetails details={summaryDetails} />
       <Section
-      icon = {<MdOutlineCastForEducation/>}
+        icon={<MdAccountCircle />}
+        title="Personal Details"
+        details={personalDetails}
+      />
+      <Section
+        icon={<IoLanguageSharp />}
+        title="Religious Background"
+        details={religiousBackground}
+      />
+      <Section
+        icon={<FaStroopwafel />}
+        title="Astro Details"
+        details={astroDetails}
+      />
+      <Section
+        icon={<RiHomeHeartFill />}
+        title="Family Details"
+        details={familyDetails}
+      />
+      <Section
+        icon={<MdOutlineCastForEducation />}
         title="Education & Career Details"
         details={educationCareerDetails}
       />
-      <Section icon ={<MdNightlife/>}title="LifeStyle" details={lifeStyleDetails} />
-      
-      <Section icon ={<IoMdCall/>}title="Contact Details" details={contactDetails} />
+      <Section
+        icon={<MdNightlife />}
+        title="LifeStyle"
+        details={lifeStyleDetails}
+      />
+
+      <Section
+        icon={<IoMdCall />}
+        title="Contact Details"
+        details={contactDetails}
+      />
     </div>
   );
 };

@@ -150,10 +150,7 @@ const ViewProfile = ({ edit = true, isPreviewPage }) => {
               instagramUrl={profile.contactInformation?.InstagramUrl || "N/A"}
               linkedInUrl={profile.contactInformation?.LinkedInUrl || "N/A"}
             />
-            {/* <KundaliCard
-            isPreview={isPreviewPage}
-            images={kundaliPhotos} // Use the fetched images here
-            /> */}
+            <KundaliCard userId="670be21366eb9770ed8867c1" />
             {edit && !isPreviewPage ? (
               <Link to={`/edit-profile/670a7ed298b8c120621d87a0`}>
                 <button>Edit</button>
