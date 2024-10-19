@@ -9,7 +9,7 @@ import ProgressBar from "../../Atoms/ProgressBar";
 import PhotoUpload from "../../Atoms/PhotoUpload";
 import UserPreviewPage from "./UserPreviewPage";
 
-const MultiStepForm = () => {
+const AddProfile = () => {
   const [step, setStep] = useState(1);
   const [userId, setUserId] = useState(uuidv4()); // Generate a unique user ID
   const [personalDetails, setPersonalDetails] = useState({
@@ -895,7 +895,7 @@ const MultiStepForm = () => {
           <ProgressBar currentStep={step} titles={titles} />
           <h3>Kundali Images (At least 1 required)</h3>
           <div style={{ display: "flex", flexWrap: "wrap" }}>
-            {Array.from({ length: 5 }).map((_, index) => (
+            {Array.from({ length: 3 }).map((_, index) => (
               <PhotoUpload
                 key={index}
                 profileId={"670be21366eb9770ed8867c1"}
@@ -929,4 +929,4 @@ const MultiStepForm = () => {
   );
 };
 
-export default MultiStepForm;
+export default AddProfile;

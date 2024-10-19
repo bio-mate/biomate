@@ -32,25 +32,6 @@ const ViewProfile = ({ edit = true, isPreviewPage }) => {
     fetchProfiles();
   }, []);
 
-  //   useEffect(() => {
-  //     const fetchImages = async () => {
-  //       try {
-  //         const response = await fetch(`/api/profile/${profileId}/images`);
-  //         if (!response.ok) {
-  //           throw new Error('Failed to fetch images');
-  //         }
-  //         const data = await response.json();
-  //         setPhotos(data.images); // Assuming your API returns { images: [...] }
-  //       } catch (err) {
-  //         setError(err.message);
-  //       } finally {
-  //         setLoading(false);
-  //       }
-  //     };
-
-  //     fetchImages();
-  //   }, [profileId]);
-
   if (loading) {
     return <div>Loading profiles...</div>;
   }
@@ -58,8 +39,7 @@ const ViewProfile = ({ edit = true, isPreviewPage }) => {
   if (error) {
     return <div>{error}</div>;
   }
-  console.log("profiles.firstName", profiles.personalDetails?.firstName);
-  console.log("setPhotos", profiles);
+  
   return (
     <div>
       {profiles.length === 0 ? (
