@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// Personal Information Schema
 const personalInfoSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
@@ -7,7 +8,12 @@ const personalInfoSchema = new mongoose.Schema({
   gender: { type: String, enum: ['Male', 'Female'], required: true },
   bloodGroup: { 
     type: String, 
-    enum: ['A Positive (A+)', 'A Negative (A-)', 'B Positive (B+)', 'B Negative (B-)', 'AB Positive (AB+)', 'AB Negative (AB-)', 'O Positive (O+)', 'O Negative (O-)'], 
+    enum: [
+      'A Positive (A+)', 'A Negative (A-)', 
+      'B Positive (B+)', 'B Negative (B-)', 
+      'AB Positive (AB+)', 'AB Negative (AB-)', 
+      'O Positive (O+)', 'O Negative (O-)'
+    ], 
     required: true 
   },
   complexion: { 
@@ -19,6 +25,7 @@ const personalInfoSchema = new mongoose.Schema({
   weight: { type: Number, required: true },
 });
 
+// Religious Background Schema
 const religiousBackgroundSchema = new mongoose.Schema({
   religion: { type: String, required: true },
   caste: { type: String },
@@ -26,6 +33,7 @@ const religiousBackgroundSchema = new mongoose.Schema({
   language: { type: String, required: true },
 });
 
+// Astro Details Schema
 const astroDetailsSchema = new mongoose.Schema({
   dateOfBirth: { type: Date, required: true },
   placeOfBirth: { type: String, required: true },
@@ -35,15 +43,17 @@ const astroDetailsSchema = new mongoose.Schema({
   gotra: { type: String, required: true },
 });
 
+// Family Details Schema
 const familyDetailsSchema = new mongoose.Schema({
   fatherName: { type: String, required: true },
   motherName: { type: String, required: true },
   fatherOccupation: { type: String, required: true },
   motherOccupation: { type: String, required: true },
-  noOfBrothers: { type: Number },
-  noOfSisters: { type: Number },
+  noOfBrothers: { type: Number, default: 0 },
+  noOfSisters: { type: Number, default: 0 },
 });
 
+// Education Details Schema
 const educationDetailsSchema = new mongoose.Schema({
   educationDetails: [{
     degree: { type: String, required: true },
@@ -51,6 +61,7 @@ const educationDetailsSchema = new mongoose.Schema({
   }]
 });
 
+// Career Details Schema
 const careerDetailsSchema = new mongoose.Schema({
   employedIn: { 
     type: String, 
@@ -66,17 +77,16 @@ const careerDetailsSchema = new mongoose.Schema({
   },
 });
 
-
-// Updated lifestyleSchema
+// Lifestyle Schema
 const lifestyleSchema = new mongoose.Schema({
   diet: { 
     type: String, 
-    enum: ['veg', 'non-veg', 'jain', 'vegan', 'occasionallyNon-Veg', 'vegetarian'], // Include vegetarian
+    enum: ['veg', 'non-veg', 'jain', 'vegan', 'occasionally non-veg', 'vegetarian'], 
     required: true 
   },
 });
 
-
+// Address Schema
 const addressSchema = new mongoose.Schema({
   country: { type: String, required: true },
   state: { type: String, required: true },
@@ -85,6 +95,7 @@ const addressSchema = new mongoose.Schema({
   permanentAddress: { type: String },
 });
 
+// Contact Information Schema
 const contactInformationSchema = new mongoose.Schema({
   contactNumber: { type: String, required: true },
   address: { type: addressSchema, required: true },
@@ -92,15 +103,20 @@ const contactInformationSchema = new mongoose.Schema({
   instagramUrl: { type: String },
   facebookUrl: { type: String },
 });
+
+// // Profile Image Schema
 // const profileImageSchema = new mongoose.Schema({
 //   imageUrl: { type: String, required: true },
 //   uploadedAt: { type: Date, default: Date.now },
 // });
 
+// // Kundali Image Schema
 // const kundaliImageSchema = new mongoose.Schema({
 //   imageUrl: { type: String, required: true },
 //   uploadedAt: { type: Date, default: Date.now },
 // });
+
+// Profile Schema
 const profileSchema = new mongoose.Schema({
   personalDetails: personalInfoSchema,
   religiousBackground: religiousBackgroundSchema,
@@ -112,11 +128,8 @@ const profileSchema = new mongoose.Schema({
   contactInformation: contactInformationSchema,
   // profileImages: [profileImageSchema],
   // kundaliImages: [kundaliImageSchema],
-  profileImages: {
-    type: [{ imageUrl: String }],
-    default: [], // Ensure it defaults to an empty array
-  },
 });
 
+// Exporting the Profile Model
 const Profile = mongoose.model('Profile', profileSchema);
 module.exports = Profile;

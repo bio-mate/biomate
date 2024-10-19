@@ -4,7 +4,8 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const authRoutes = require('./routes/auth');
 const profileRoutes = require('./routes/profile');
-const imageRoutes = require('./routes/images'); // Adjust the path as necessary
+const imageRoutes = require('./routes/images');
+const kundaliRoutes = require('./routes/kundali');
 const path = require('path');
 
 dotenv.config(); // Load environment variables
@@ -27,7 +28,8 @@ mongoose.connect(process.env.MONGODB_URI, {
 // Set up routes
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
-app.use('/api/profile', imageRoutes); // Prefix your routes
+app.use('/api/profile', imageRoutes);
+app.use('/api/profile', kundaliRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 4000;

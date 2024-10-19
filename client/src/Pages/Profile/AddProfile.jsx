@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import apiRequest from "../../utils/api";
 import { v4 as uuidv4 } from "uuid";
@@ -80,14 +80,11 @@ const MultiStepForm = () => {
 
   const [imagePreviews, setImagePreviews] = useState({
     profileImages: [],
-    // kundaliImages: [],
+    kundaliImages: [],
   });
-
-  // const [profileData, setProfileData] = useState({
-  //   profileImages: [],
-  //   kundaliImages: [],
-  // });
-
+  const [profiles, setProfiles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const titles = [
     "Personal",
     "Religious",
@@ -110,33 +107,23 @@ const MultiStepForm = () => {
   const handlePrevious = () => {
     setStep(step - 1);
   };
+  useEffect(() => {
+    const fetchProfiles = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:4000/api/profile/viewProfile"
+        );
+        setProfiles(response.data);
+      } catch (error) {
+        console.error("Error fetching profiles:", error);
+        setError("Could not fetch profiles. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // const handleImageUpload = (e, type) => {
-  //   const files = Array.from(e.target.files);
-  //   const validFiles = files.filter((file) => file.size <= 3 * 1024 * 1024); // 3 MB size limit
-
-  //   // Check the total number of images after upload
-  //   const currentImagesCount = profileData[type]?.length || 0; // Use optional chaining to handle undefined
-  //   if (validFiles.length + currentImagesCount > (type === "profileImages" ? 5 : 3)) {
-  //     alert(`You can upload a maximum of ${type === "profileImages" ? 5 : 3} images.`);
-  //     return;
-  //   }
-
-  //   // Create URLs for new images
-  //   const newImages = validFiles.map((file) => URL.createObjectURL(file));
-
-  //   // Update the profile data and image previews
-  //   setProfileData((prevData) => ({
-  //     ...prevData,
-  //     [type]: [...(prevData[type] || []), ...validFiles], // Fallback to empty array if undefined
-  //   }));
-
-  //   setImagePreviews((prev) => ({
-  //     ...prev,
-  //     [type]: [...(prev[type] || []), ...newImages], // Fallback to empty array if undefined
-  //   }));
-  // };
-
+    fetchProfiles();
+  }, []);
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -151,14 +138,18 @@ const MultiStepForm = () => {
     formData.append("careerDetails", JSON.stringify(careerDetails));
     formData.append("lifestyle", JSON.stringify(lifestyle));
     formData.append("contactInformation", JSON.stringify(contactInformation));
+    //navigate(`/addPhoto`);
+    setStep(step + 1);
 
-    // Append images
-    // profileData.profileImages.forEach((file) => {
-    //   formData.append("profileImages", file);
-    // });
-    // profileData.kundaliImages.forEach((file) => {
-    //   formData.append("kundaliImages", file);
-    // });
+    // Append profile images
+    imagePreviews.profileImages.forEach((file) => {
+      formData.append("profileImages", file);
+    });
+
+    // Append kundali images
+    imagePreviews.kundaliImages.forEach((file) => {
+      formData.append("kundaliImages", file);
+    });
 
     try {
       const response = await apiRequest(
@@ -176,7 +167,6 @@ const MultiStepForm = () => {
     } catch (error) {
       console.error("Error submitting form:", error);
     }
-    // navigate(`/view-profile/${userId}`);
   };
 
   const handleImageUpload = (newImage) => {
@@ -185,14 +175,22 @@ const MultiStepForm = () => {
       profileImages: [...prev.profileImages, newImage],
     }));
   };
-  
+
+  const handleKundaliUpload = (image) => {
+    setImagePreviews((prev) => ({
+      ...prev,
+      kundaliImages: [...prev.kundaliImages, image],
+    }));
+  };
+
   const removeImage = (index) => {
     setImagePreviews((prev) => ({
       ...prev,
       profileImages: prev.profileImages.filter((_, i) => i !== index),
     }));
   };
-  
+  console.log("profilesprofilesprofiles", profiles);
+
   return (
     <form onSubmit={handleSubmit} enctype="multipart/form-data">
       {step === 1 && (
@@ -390,13 +388,8 @@ const MultiStepForm = () => {
             label="Back"
             onClick={handlePrevious}
             type="secondary"
-            
           />
-          <CustomButton
-            label="Next" type="primary"
-            onClick={handleNext}
-            
-          />
+          <CustomButton label="Next" type="primary" onClick={handleNext} />
         </div>
       )}
 
@@ -493,7 +486,8 @@ const MultiStepForm = () => {
             Back
           </CustomButton>
           <CustomButton
-            label="Next" type="primary"
+            label="Next"
+            type="primary"
             className="btn btn-success"
             onClick={handleNext}
           >
@@ -868,127 +862,69 @@ const MultiStepForm = () => {
         </div>
       )}
 
-      {/* {step === 9 && (
+      {step === 9 && (
         <div>
-        <ProgressBar currentStep={step} titles={titles} />
-        <h3>Profile Images (At least 1 required)</h3>
-        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-          {Array.from({ length: 5 }).map((_, index) => (
-            <PhotoUpload key={index} onUpload={(e) => handleImageUpload(e)} />
-          ))}
-        </div>
-        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-          {imagePreviews.profileImages.map((image, index) => (
-            <div key={index} style={{ position: 'relative', margin: '5px' }}>
-              <img
-                src={image}
-                alt="Profile Preview"
-                style={{ width: '100px', height: '100px' }}
+          <ProgressBar currentStep={step} titles={titles} />
+          <h3>Profile Images (At least 1 required)</h3>
+          <div style={{ display: "flex", flexWrap: "wrap" }}>
+            {Array.from({ length: 5 }).map((_, index) => (
+              <PhotoUpload
+                key={index}
+                profileId={"670be21366eb9770ed8867c1"}
+                onUpload={(image) => handleImageUpload(image)}
               />
-              <CustomButton
-                //onClick={() => removeImage(index)}
-                style={{ position: 'absolute', top: 0, right: 0 }}
-              >
-                X
-              </CustomButton>
-            </div>
-          ))}
+            ))}
+          </div>
+          <CustomButton
+            label="Back"
+            onClick={handlePrevious}
+            type="secondary"
+            disabled={imagePreviews.profileImages.length === 0}
+          />
+          <CustomButton
+            label="Next"
+            type="primary"
+            onClick={handleNext}
+            disabled={imagePreviews.profileImages.length < 1}
+          />
         </div>
-        <CustomButton
-          label="Back"
-          onClick={handlePrevious}
-          type="secondary"
-          disabled={imagePreviews.profileImages.length === 0}
-        >
-          Back
-        </CustomButton>
-        <CustomButton
-          label="Next"
-          type="primary"
-          onClick={handleNext}
-          disabled={imagePreviews.profileImages.length < 1}
-        >
-          Next
-        </CustomButton>
-      </div>
       )}
 
-      {step === 10 && (
+      {step === 10 && ( // Assuming step 10 is for Kundali upload
         <div>
-        <ProgressBar currentStep={step} titles={titles} />
-        <h3>Kundali Images</h3>
-        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-          {Array.from({ length: 3 }).map((_, index) => (
-            <PhotoUpload key={index} onUpload={(e) => handleImageUpload(e)} />
-          ))}
-        </div>
-        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-          {imagePreviews.kundaliImages.map((image, index) => (
-            <div key={index} style={{ position: 'relative', margin: '5px' }}>
-              <img
-                src={image}
-                alt="Kundali Preview"
-                style={{ width: '100px', height: '100px' }}
+          <ProgressBar currentStep={step} titles={titles} />
+          <h3>Kundali Images (At least 1 required)</h3>
+          <div style={{ display: "flex", flexWrap: "wrap" }}>
+            {Array.from({ length: 5 }).map((_, index) => (
+              <PhotoUpload
+                key={index}
+                profileId={"670be21366eb9770ed8867c1"}
+                onUpload={(image) => handleKundaliUpload(image)} // Adjust this handler for kundali images
               />
-              <CustomButton
-                //onClick={() => removeImage(index)}
-                style={{ position: 'absolute', top: 0, right: 0 }}
-              >
-                X
-              </CustomButton>
-            </div>
-          ))}
+            ))}
+          </div>
+          <CustomButton
+            label="Back"
+            onClick={handlePrevious}
+            type="secondary"
+            disabled={imagePreviews.kundaliImages.length === 0} // Ensure the appropriate preview array is used
+          />
+          <CustomButton
+            label="Next"
+            type="primary"
+            onClick={handleSubmit}
+            disabled={imagePreviews.kundaliImages.length < 1} // Ensure at least one image is uploaded
+          />
         </div>
-        <CustomButton label="Back" onClick={handlePrevious} type="secondary">
-          Back
-        </CustomButton>
-        <CustomButton
-          label="Preview"
-          onClick={handleSubmit}
-          disabled={imagePreviews.kundaliImages.length > 3}
-          type="primary"
-        >
-          Preview
-        </CustomButton>
-      </div>
-      )} */}
+      )}
 
-{step === 9 && (
-  <div>
-    <ProgressBar currentStep={step} titles={titles} />
-    <h3>Profile Images (At least 1 required)</h3>
-    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-      {Array.from({ length: 5 }).map((_, index) => (
-        <PhotoUpload
-          key={index}
-          onUpload={(image) => handleImageUpload(image)}
-        />
-      ))}
-    </div>
-    <CustomButton
-      label="Back"
-      onClick={handlePrevious}
-      type="secondary"
-      disabled={imagePreviews.profileImages.length === 0}
-    />
-    <CustomButton
-      label="Next"
-      type="primary"
-      onClick={handleNext}
-      disabled={imagePreviews.profileImages.length < 1}
-    />
-  </div>
-)}
-
-      {step === 10 && (
+      {/* {step === 11 && (
         <div>
-           <ProgressBar currentStep={step} titles={titles} />
-           <h3>Preview</h3>
-        <UserPreviewPage/>
-         
+          <ProgressBar currentStep={step} titles={titles} />
+          <h3>Preview</h3>
+          <UserPreviewPage />
         </div>
-        )}
-      
+      )} */}
     </form>
   );
 };

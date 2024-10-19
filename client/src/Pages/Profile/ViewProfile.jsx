@@ -69,7 +69,7 @@ const ViewProfile = ({ edit = true, isPreviewPage }) => {
           <div key={profile.userId}>
             <div className="min-h-screen bg-gray-100 flex items-center justify-center">
               <ProfileCard
-                userId="670b75e996c492112cd0a675"
+                userId="670be21366eb9770ed8867c1"
                 isPreview={edit}
                 name={
                   profile.personalDetails?.firstName ||

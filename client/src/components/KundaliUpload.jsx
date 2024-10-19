@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import '../styles/PhotoUpload.css'; // Adjust the path as needed
 
-const PhotoUpload = ({ profileId = "670bd8d5b837ab94773ed826", onUpload }) => {
+const KundaliUpload = ({ profileId = "670b75e996c492112cd0a675", onUpload }) => {
   const [image, setImage] = useState(null);
 
   const handleUpload = async (event) => {
@@ -12,13 +12,14 @@ const PhotoUpload = ({ profileId = "670bd8d5b837ab94773ed826", onUpload }) => {
     formData.append('image', file);
 
     try {
-      const response = await axios.post(`http://localhost:4000/api/profile/${profileId}/uploadImage`, formData, {
+      const response = await axios.post(`http://localhost:4000/api/profile/${profileId}/uploadKundaliImage`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
       if (response.status === 201) {
-        setImage(response.data.profile.profileImages[response.data.profile.profileImages.length - 1]); // Get the newly uploaded image
+        const uploadedImage = response.data.profile.kundaliImages[response.data.profile.kundaliImages.length - 1];
+        setImage(uploadedImage); // Get the newly uploaded image
         onUpload(); // Trigger parent component to refresh images
       }
     } catch (error) {
@@ -27,8 +28,10 @@ const PhotoUpload = ({ profileId = "670bd8d5b837ab94773ed826", onUpload }) => {
   };
 
   const handleDelete = async () => {
+    if (!image) return; // Prevent errors if no image is selected
+
     try {
-      const response = await axios.delete(`http://localhost:4000/api/profile/${profileId}/deleteImage/${image._id}`);
+      const response = await axios.delete(`http://localhost:4000/api/profile/${profileId}/deleteKundaliImage/${image._id}`);
       if (response.status === 200) {
         setImage(null); // Clear the image from state
         onUpload(); // Trigger parent component to refresh images
@@ -42,7 +45,7 @@ const PhotoUpload = ({ profileId = "670bd8d5b837ab94773ed826", onUpload }) => {
     <div id="photo-upload-container" className="photo-upload-container">
       {image ? (
         <div className="photo-preview">
-          <img src={`data:image/jpeg;base64,${image.imageUrl}`} alt="Uploaded" className="uploaded-image" />
+          <img src={image.imageUrl} alt="Uploaded" className="uploaded-image" />
           <button onClick={handleDelete} className="cancel-button">X</button>
         </div>
       ) : (
@@ -62,9 +65,9 @@ const PhotoUpload = ({ profileId = "670bd8d5b837ab94773ed826", onUpload }) => {
   );
 };
 
-PhotoUpload.propTypes = {
+KundaliUpload.propTypes = {
   profileId: PropTypes.string.isRequired,
   onUpload: PropTypes.func.isRequired,
 };
 
-export default PhotoUpload;
+export default KundaliUpload;

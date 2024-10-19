@@ -12,6 +12,7 @@ import UpdateProfile from "./Pages/Profile/EditProfile";
 import ViewProfile from "./Pages/Profile/ViewProfile";
 import Payment from "./Pages/Payment/Payment";
 import Profile from "./Pages/Profile/Profile";
+import AddPhoto from "./Pages/Profile/AddPhoto";
 
 const App = () => {
   return (
@@ -34,6 +35,10 @@ const App = () => {
             path="/addProfile"
             element={<ProtectedRoute component={MultiStepForm} />}
           />
+          {/* <Route
+            path="/addPhoto"
+            element={<ProtectedRoute component={AddPhoto} />}
+          /> */}
           <Route
             path="/edit-profile/:id"
             element={<ProtectedRoute component={UpdateProfile} />}
