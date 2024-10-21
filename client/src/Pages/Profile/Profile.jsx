@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import AddProfile from "./AddProfile";
-import ProfileCard from "../../components/ProfileCard"; // Ensure you import the ProfileCard component
 import { FaPlus } from "react-icons/fa"; // Import the plus icon
 import useAuth from "../../context/useAuth";
 import AddProfileCard from "../../components/AddProfileCard";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../../components/Navbar";
 
 const Profile = () => {
   const { user } = useAuth(); // Get the logged-in user from context
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const userId = user.id
+  console.log('user',user.id)
 const navigate = useNavigate();
   useEffect(() => {
     const fetchProfiles = async () => {
@@ -43,6 +44,19 @@ const navigate = useNavigate();
 
   return (
     <div className="container my-5">
+      <Navbar/>
+          <div>
+      {user ? (
+        <div>
+          <h1>Welcome, {user.firstName}!</h1>
+          <p>Email: {user.email}</p>
+          {/* Add more user details as needed */}
+        </div>
+      ) : (
+        <p>Please log in to see your profile.</p>
+      )}
+    </div>
+
       <div style={{display:'flex', justifyContent:'space-between'}}>
       <h1 className="text-center mb-4">Profiles</h1>
 
@@ -57,9 +71,9 @@ const navigate = useNavigate();
       <div className="row">
         {profiles.length > 0 ? (
           profiles.map((profile) => (
-            <div className="col-md-4 mb-4" key={profile.userId}>
+            <div className="col-md-4 mb-4" key={userId}>
               <AddProfileCard
-                userId={profile.userId || "670be21366eb9770ed8867c1"}
+                userId={userId}
                 name={`${profile.personalDetails?.firstName || "N/A"} ${profile.personalDetails?.lastName || "N/A"}`}
                 age={profile.personalDetails?.age || "N/A"}
                 location={`${profile.contactInformation?.address.district || "N/A"}, ${profile.contactInformation?.address.state || "N/A"}, ${profile.contactInformation?.address.country || "N/A"}`}

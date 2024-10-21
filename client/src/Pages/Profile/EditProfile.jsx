@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import CustomButton from "../../Atoms/CustomButton";
 
 const UpdateProfile = () => {
-  const { userId = '670a7ed298b8c120621d87a0' } = useParams(); // Get user ID from the route
+  const { userId = '671397f170a753bb6e3093b2' } = useParams(); // Get user ID from the route
   const navigate = useNavigate();
   
   const [profileData, setProfileData] = useState({

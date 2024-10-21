@@ -139,18 +139,18 @@ const AddProfile = () => {
     formData.append("lifestyle", JSON.stringify(lifestyle));
     formData.append("contactInformation", JSON.stringify(contactInformation));
     //navigate(`/addPhoto`);
-    setStep(step + 1);
+    // setStep(step + 1);
 
-    // Append profile images
-    imagePreviews.profileImages.forEach((file) => {
-      formData.append("profileImages", file);
-    });
+    // // Append profile images
+    // imagePreviews.profileImages.forEach((file) => {
+    //   formData.append("profileImages", file);
+    // });
 
-    // Append kundali images
-    imagePreviews.kundaliImages.forEach((file) => {
-      formData.append("kundaliImages", file);
-    });
-
+    // // Append kundali images
+    // imagePreviews.kundaliImages.forEach((file) => {
+    //   formData.append("kundaliImages", file);
+    // });
+    console.log("formdata", formData)
     try {
       const response = await apiRequest(
         "POST",
@@ -200,7 +200,7 @@ const AddProfile = () => {
 
           <input
             type="text"
-            placeholder="First Name"
+            placeholder="Enter First Name"
             value={personalDetails.firstName}
             onChange={(e) =>
               setPersonalDetails({
@@ -856,13 +856,13 @@ const AddProfile = () => {
           <CustomButton label="Back" onClick={handlePrevious} type="secondary">
             Back
           </CustomButton>
-          <CustomButton label="Next" type="primary" onClick={handleNext}>
+          <CustomButton label="Next" type="primary" onClick={handleSubmit}>
             Next
           </CustomButton>
         </div>
       )}
 
-      {step === 9 && (
+      {/* {step === 9 && (
         <div>
           <ProgressBar currentStep={step} titles={titles} />
           <h3>Profile Images (At least 1 required)</h3>
@@ -916,7 +916,7 @@ const AddProfile = () => {
             disabled={imagePreviews.kundaliImages.length < 1} // Ensure at least one image is uploaded
           />
         </div>
-      )}
+      )} */}
 
       {/* {step === 11 && (
         <div>

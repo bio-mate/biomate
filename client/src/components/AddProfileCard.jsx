@@ -79,7 +79,7 @@ const navigate = useNavigate();
       <div className="card shadow p-4" style={{ borderRadius: "10px" }}>
         <div className="text-center">
           {/* Profile Image */}
-          {preloadedImages.length > 0 && (
+          {preloadedImages.length >= 0 && (
             <img
               src={preloadedImages[0]}
               alt="Profile"

@@ -55,10 +55,10 @@ const familyDetailsSchema = new mongoose.Schema({
 
 // Education Details Schema
 const educationDetailsSchema = new mongoose.Schema({
-  educationDetails: [{
+  
     degree: { type: String, required: true },
     collegeName: { type: String, required: true },
-  }]
+  //}]
 });
 
 // Career Details Schema

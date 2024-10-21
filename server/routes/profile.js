@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Profile = require("../models/Profile"); // Import the Profile model
+const Profile = require("../models/profile"); // Import the Profile model
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
@@ -24,7 +24,7 @@ const upload = multer({ storage: storage, limits: { fileSize: 5 * 1024 * 1024 } 
 
 // POST endpoint to handle profile creation
 router.post("/addProfile", 
-  upload.fields([{ name: 'profileImages', maxCount: 5 }, { name: 'kundaliImages', maxCount: 3 }]), 
+  //upload.fields([{ name: 'profileImages', maxCount: 5 }, { name: 'kundaliImages', maxCount: 3 }]), 
   async (req, res) => {
     const {
       userId,
@@ -45,8 +45,8 @@ router.post("/addProfile",
 
     try {
       // Get uploaded files from req.files
-      const profileImages = req.files['profileImages'] ? req.files['profileImages'].map(file => ({ imageUrl: file.path })) : [];
-      const kundaliImages = req.files['kundaliImages'] ? req.files['kundaliImages'].map(file => ({ imageUrl: file.path })) : [];
+      // const profileImages = req.files['profileImages'] ? req.files['profileImages'].map(file => ({ imageUrl: file.path })) : [];
+      // const kundaliImages = req.files['kundaliImages'] ? req.files['kundaliImages'].map(file => ({ imageUrl: file.path })) : [];
 
       const newProfile = new Profile({
         userId,
@@ -58,8 +58,8 @@ router.post("/addProfile",
         careerDetails: JSON.parse(careerDetails),
         lifestyle: JSON.parse(lifestyle),
         contactInformation: JSON.parse(contactInformation),
-        profileImages, // Store profile images
-        kundaliImages, // Store kundali images
+        // profileImages, // Store profile images
+        // kundaliImages, // Store kundali images
       });
 
       await newProfile.save(); // Save the profile details

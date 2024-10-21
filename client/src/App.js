@@ -12,6 +12,7 @@ import UpdateProfile from "./Pages/Profile/EditProfile";
 import ViewProfile from "./Pages/Profile/ViewProfile";
 import Payment from "./Pages/Payment/Payment";
 import Profile from "./Pages/Profile/Profile";
+import Main from "./Pages/Login/main";
 
 const App = () => {
   return (
@@ -21,7 +22,7 @@ const App = () => {
           {/* Login */}
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<Main />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
 
